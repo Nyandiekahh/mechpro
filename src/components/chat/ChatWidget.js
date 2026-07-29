@@ -73,10 +73,10 @@ export default function ChatWidget() {
     pushBot({ text: step.prompt, chips: step.chips });
   }, [pushBot]);
 
-  const stepChips = (step, answers) => {
+  const stepChips = useCallback((step) => {
     if (step.chipsFrom === "services") return services.map((s) => s.name);
     return step.chips;
-  };
+  }, [services]);
 
   const advanceFlow = useCallback(async (value) => {
     const current = FLOW_STEPS[flow.step];
@@ -99,7 +99,7 @@ export default function ChatWidget() {
       const next = FLOW_STEPS[nextIndex];
       setFlow({ step: nextIndex, answers });
       const prompt = typeof next.prompt === "function" ? next.prompt(answers) : next.prompt;
-      pushBot({ text: prompt, chips: stepChips(next, answers) });
+      pushBot({ text: prompt, chips: stepChips(next) });
       return;
     }
 
@@ -128,7 +128,7 @@ export default function ChatWidget() {
         ) }],
       }, 700);
     }
-  }, [flow, pushBot, wa, services]);
+  }, [flow, pushBot, wa, services, stepChips]);
 
   // ---------- send handler ----------
   const send = (raw) => {

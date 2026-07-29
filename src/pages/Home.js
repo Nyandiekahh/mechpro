@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import Button from "../components/ui/Button";
 import TickRule from "../components/ui/TickRule";
 import SectionHeader from "../components/ui/SectionHeader";
