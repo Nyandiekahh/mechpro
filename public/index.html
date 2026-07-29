@@ -2,42 +2,56 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <meta name="theme-color" content="#1e7a46" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- ============ Identity & search snippet ============ -->
+    <title>MECHPRO SOLUTIONS LTD — Professional HVAC Solutions Kenya</title>
+    <meta name="description" content="HVAC design, air conditioning installation, mechanical ventilation, repairs and maintenance across Kenya. Request a free quotation from MECHPRO SOLUTIONS LTD — professional engineers, genuine equipment, fast response." />
+
+    <!-- ============ Icons ============ -->
+    <link rel="icon" href="%PUBLIC_URL%/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.svg" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- ============ Link previews (WhatsApp, Facebook, LinkedIn) ============ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MECHPRO SOLUTIONS LTD" />
+    <meta property="og:title" content="MECHPRO SOLUTIONS LTD — Professional HVAC Solutions" />
+    <meta property="og:description" content="Air conditioning installation, mechanical ventilation, HVAC design, repairs and maintenance across Kenya. Engineers, not equipment retailers. Request a free quotation." />
+    <meta property="og:url" content="https://www.mechpro.co.ke/" />
+    <meta property="og:image" content="https://www.mechpro.co.ke/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_KE" />
+
+    <!-- ============ X / Twitter card ============ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MECHPRO SOLUTIONS LTD — Professional HVAC Solutions" />
+    <meta name="twitter:description" content="HVAC design, installation, ventilation and maintenance across Kenya. Request a free quotation." />
+    <meta name="twitter:image" content="https://www.mechpro.co.ke/og-image.png" />
+
+    <!-- ============ Local business structured data (SEO) ============ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HVACBusiness",
+      "name": "MECHPRO SOLUTIONS LTD",
+      "slogan": "Professional HVAC Solutions",
+      "url": "https://www.mechpro.co.ke/",
+      "logo": "https://www.mechpro.co.ke/logo.svg",
+      "image": "https://www.mechpro.co.ke/og-image.png",
+      "telephone": "+254758644781",
+      "email": "info@mechpro.co.ke",
+      "address": { "@type": "PostalAddress", "addressLocality": "Nairobi", "addressCountry": "KE" },
+      "areaServed": ["Nairobi", "Kiambu", "Machakos", "Kajiado", "Nakuru", "Eldoret", "Kisumu", "Mombasa", "Nyeri", "Thika", "Meru"],
+      "openingHours": "Mo-Sa 08:00-18:00",
+      "priceRange": "KES"
+    }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>MECHPRO SOLUTIONS LTD — Professional HVAC Solutions across Kenya. Call +254 758 644 781 or email info@mechpro.co.ke.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>
