@@ -128,7 +128,7 @@ export default function ChatWidget() {
         ) }],
       }, 700);
     }
-  }, [flow, pushBot, wa, services, stepChips]);
+  }, [flow, pushBot, wa, stepChips]);
 
   // ---------- send handler ----------
   const send = (raw) => {
