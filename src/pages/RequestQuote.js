@@ -3,8 +3,10 @@ import PageHero from "../components/ui/PageHero";
 import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
 import SpecPlate from "../components/ui/SpecPlate";
-import siteConfig, { whatsappLink } from "../data/siteConfig";
-import services from "../data/services";
+import { useSite } from "../context/SiteContext";
+import { useApi } from "../api/hooks";
+import { apiPost } from "../api/client";
+import fallbackServices from "../data/services";
 
 // Form option lists — from the WRS. Edit here, form updates itself.
 const projectTypes = [
@@ -27,9 +29,14 @@ const emptyForm = {
 };
 
 export default function RequestQuote() {
+  const { config, wa } = useSite();
+  const { data: services } = useApi("/api/services/", fallbackServices);
+
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
-  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(null);        // null | "api" | "whatsapp"
+  const [reference, setReference] = useState("");
 
   const set = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
@@ -46,8 +53,7 @@ export default function RequestQuote() {
     return next;
   };
 
-  // Builds the RFQ as a WhatsApp message — works today with no backend.
-  // When the Django API lands, POST `form` here instead and keep the same UI.
+  // WhatsApp fallback message — used only if the API is unreachable.
   const buildMessage = () => {
     const lines = [
       "QUOTATION REQUEST — via mechpro website",
@@ -65,33 +71,78 @@ export default function RequestQuote() {
     return lines.join("\n");
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const next = validate();
     if (Object.keys(next).length > 0) { setErrors(next); return; }
-    window.open(whatsappLink(buildMessage()), "_blank", "noreferrer");
-    setSent(true);
+
+    setSending(true);
+    try {
+      // The RFQ workflow: store → reference → emails → receipt.
+      const res = await apiPost("/api/rfq/", form);
+      if (res.ok) {
+        setReference(res.data.reference);
+        setSent("api");
+      } else if (res.status === 400 && res.data) {
+        // Map server-side validation errors onto their fields.
+        const serverErrors = {};
+        Object.entries(res.data).forEach(([field, msgs]) => {
+          serverErrors[field] = Array.isArray(msgs) ? msgs.join(" ") : String(msgs);
+        });
+        setErrors(serverErrors);
+      } else {
+        throw new Error("unexpected");
+      }
+    } catch {
+      // Backend unreachable — the lead still gets through via WhatsApp.
+      window.open(wa(buildMessage()), "_blank", "noreferrer");
+      setSent("whatsapp");
+    } finally {
+      setSending(false);
+    }
   };
 
-  const mailtoHref = `mailto:${siteConfig.emails.quotations}?subject=${encodeURIComponent(
+  const mailtoHref = `mailto:${config.emails.quotations}?subject=${encodeURIComponent(
     "Quotation Request — " + (form.fullName || "Website")
   )}&body=${encodeURIComponent(buildMessage())}`;
 
   if (sent) {
     return (
       <>
-        <PageHero kicker="Request received" title="Your request is on its way." />
+        <PageHero
+          kicker="Request received"
+          title={sent === "api" ? "Request received. You're in the system." : "Your request is on its way."}
+        />
         <section className="section">
           <div className="container container--narrow">
+            {sent === "api" && (
+              <div className="reference-box">
+                <span>Your reference number</span>
+                <strong>{reference}</strong>
+              </div>
+            )}
             <div className="detail-aside__card">
               <p className="kicker">What happens next</p>
               <ul className="check-list">
-                <li><Icon name="check" size={16} /> Your request opened in WhatsApp — press send if you haven't yet.</li>
-                <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
-                <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
+                {sent === "api" ? (
+                  <>
+                    <li><Icon name="check" size={16} /> A confirmation email is on its way{form.email ? ` to ${form.email}` : ""} with your reference number.</li>
+                    <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
+                    <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
+                    <li><Icon name="check" size={16} /> Quote your reference — <strong>{reference}</strong> — in any follow-up.</li>
+                  </>
+                ) : (
+                  <>
+                    <li><Icon name="check" size={16} /> Your request opened in WhatsApp — press send if you haven't yet.</li>
+                    <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
+                    <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
+                  </>
+                )}
               </ul>
               <div className="detail-aside__actions">
-                <Button href={mailtoHref} variant="ghost" icon="mail">Send by email instead</Button>
+                {sent === "whatsapp" && (
+                  <Button href={mailtoHref} variant="ghost" icon="mail">Send by email instead</Button>
+                )}
                 <Button to="/" variant="ink" icon="arrow">Back to home</Button>
               </div>
             </div>
@@ -203,11 +254,13 @@ export default function RequestQuote() {
             </fieldset>
 
             <div className="rfq-form__actions">
-              <Button type="submit" icon="whatsapp">Send request via WhatsApp</Button>
+              <Button type="submit" icon="arrow">
+                {sending ? "Sending…" : "Send quotation request"}
+              </Button>
               <Button href={mailtoHref} variant="ghost" icon="mail">Send by email instead</Button>
             </div>
             <p className="rfq-form__note">
-              Prefer to talk? Call <a href={siteConfig.phoneHref}>{siteConfig.phoneDisplay}</a> — a
+              Prefer to talk? Call <a href={config.phoneHref}>{config.phoneDisplay}</a> — a
               human answers.
             </p>
           </form>
@@ -223,9 +276,9 @@ export default function RequestQuote() {
             <div className="detail-aside__card">
               <p className="kicker">Direct lines</p>
               <ul className="footer__contact">
-                <li><a href={`mailto:${siteConfig.emails.quotations}`}><Icon name="mail" size={15} /> {siteConfig.emails.quotations}</a></li>
-                <li><a href={`mailto:${siteConfig.emails.sales}`}><Icon name="mail" size={15} /> {siteConfig.emails.sales}</a></li>
-                <li><a href={siteConfig.phoneHref}><Icon name="phone" size={15} /> {siteConfig.phoneDisplay}</a></li>
+                <li><a href={`mailto:${config.emails.quotations}`}><Icon name="mail" size={15} /> {config.emails.quotations}</a></li>
+                <li><a href={`mailto:${config.emails.sales}`}><Icon name="mail" size={15} /> {config.emails.sales}</a></li>
+                <li><a href={config.phoneHref}><Icon name="phone" size={15} /> {config.phoneDisplay}</a></li>
               </ul>
             </div>
           </aside>

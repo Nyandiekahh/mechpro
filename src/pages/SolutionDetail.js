@@ -5,14 +5,19 @@ import CTASection from "../components/ui/CTASection";
 import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
 import NotFound from "./NotFound";
-import { getIndustry } from "../data/industries";
-import projects from "../data/projects";
 import ProjectCard from "../components/cards/ProjectCard";
+import { useApi } from "../api/hooks";
+import { getIndustry } from "../data/industries";
+import fallbackProjects from "../data/projects";
 
 export default function SolutionDetail() {
   const { slug } = useParams();
-  const industry = getIndustry(slug);
-  if (!industry) return <NotFound />;
+  const { data: industry, loading } = useApi(`/api/solutions/${slug}/`, getIndustry(slug));
+  const { data: projects } = useApi("/api/projects/", fallbackProjects);
+
+  if (!industry) {
+    return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;
+  }
 
   const related = projects.filter(
     (p) => p.sector.toLowerCase() === industry.name.toLowerCase().split(" ")[0].toLowerCase()
@@ -20,7 +25,7 @@ export default function SolutionDetail() {
 
   return (
     <>
-      <PageHero kicker={`HVAC for ${industry.tag}`} title={industry.name} lead={industry.challenge} />
+      <PageHero kicker={`HVAC for ${industry.tag}`} title={industry.name} lead={industry.challenge} image={industry.image} />
 
       <section className="section">
         <div className="container detail-grid">

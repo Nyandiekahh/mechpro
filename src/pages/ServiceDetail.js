@@ -6,21 +6,26 @@ import CTASection from "../components/ui/CTASection";
 import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
 import NotFound from "./NotFound";
+import { useApi } from "../api/hooks";
 import { getService } from "../data/services";
-import { whatsappLink } from "../data/siteConfig";
+import { useSite } from "../context/SiteContext";
 
 export default function ServiceDetail() {
   const { slug } = useParams();
-  const service = getService(slug);
-  if (!service) return <NotFound />;
+  const { wa } = useSite();
+  const { data: service, loading } = useApi(`/api/services/${slug}/`, getService(slug));
 
-  const inquiry = whatsappLink(
-    `Hello MECHPRO SOLUTIONS LTD. I would like a quotation for ${service.name}.`
-  );
+  if (!service) {
+    // Content added in the CMS won't be in the bundled fallback — wait for the
+    // API before declaring 404.
+    return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;
+  }
+
+  const inquiry = wa(`Hello MECHPRO SOLUTIONS LTD. I would like a quotation for ${service.name}.`);
 
   return (
     <>
-      <PageHero kicker="Service" title={service.name} lead={service.summary}>
+      <PageHero kicker="Service" title={service.name} lead={service.summary} image={service.image}>
         <SpecPlate
           className="specplate--onink"
           items={[

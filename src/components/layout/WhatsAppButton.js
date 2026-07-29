@@ -1,12 +1,13 @@
 import Icon from "../ui/Icon";
-import { whatsappLink } from "../../data/siteConfig";
+import { useSite } from "../../context/SiteContext";
 
 /** Floating WhatsApp button — visible on every page, per the WRS. */
 export default function WhatsAppButton() {
+  const { wa } = useSite();
   return (
     <a
       className="whatsapp-float"
-      href={whatsappLink()}
+      href={wa()}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with MECHPRO on WhatsApp"

@@ -1,17 +1,25 @@
 import { Link } from "react-router-dom";
 import Icon from "../ui/Icon";
 import SpecPlate from "../ui/SpecPlate";
-import { whatsappLink } from "../../data/siteConfig";
+import { useSite } from "../../context/SiteContext";
+import useReveal from "../../hooks/useReveal";
 
-export default function ProductCard({ product }) {
-  const inquiry = whatsappLink(
+export default function ProductCard({ product, i = 0 }) {
+  const { wa } = useSite();
+  const r = useReveal((i % 4) * 80);
+  const inquiry = wa(
     `Hello MECHPRO SOLUTIONS LTD. I'm interested in the ${product.name} (${product.model}). Please share a quotation.`
   );
+  const photo = product.images && product.images.length > 0 ? product.images[0] : null;
+
   return (
-    <article className="card product-card">
+    <article ref={r.ref} className={`card product-card ${r.className}`} style={r.style}>
       <Link to={`/products/${product.slug}`} className="product-card__media" aria-label={product.name}>
-        {/* Image slot — drop a real photo URL into the data file and render <img> here */}
-        <span className="product-card__monogram">{product.brand.slice(0, 2)}</span>
+        {photo ? (
+          <img src={photo.url} alt={photo.alt || product.name} loading="lazy" />
+        ) : (
+          <span className="product-card__monogram">{product.brand.slice(0, 2)}</span>
+        )}
         <span className="product-card__brand">{product.brand}</span>
         {product.badges.length > 0 && (
           <span className="product-card__badges">

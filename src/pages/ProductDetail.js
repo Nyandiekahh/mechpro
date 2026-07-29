@@ -7,22 +7,29 @@ import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
 import ProductCard from "../components/cards/ProductCard";
 import NotFound from "./NotFound";
-import products, { getProduct } from "../data/products";
-import { whatsappLink } from "../data/siteConfig";
+import { useApi, useApiAll } from "../api/hooks";
+import fallbackProducts, { getProduct } from "../data/products";
+import { useSite } from "../context/SiteContext";
 
 export default function ProductDetail() {
   const { slug } = useParams();
-  const product = getProduct(slug);
-  if (!product) return <NotFound />;
+  const { wa } = useSite();
+  const { data: product, loading } = useApi(`/api/products/${slug}/`, getProduct(slug));
+  const { data: allProducts } = useApiAll("/api/products/", fallbackProducts);
 
-  const related = products
+  if (!product) {
+    return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;
+  }
+
+  const related = allProducts
     .filter((p) => p.slug !== product.slug && p.category === product.category)
-    .concat(products.filter((p) => p.slug !== product.slug && p.category !== product.category))
+    .concat(allProducts.filter((p) => p.slug !== product.slug && p.category !== product.category))
     .slice(0, 3);
 
-  const inquiry = whatsappLink(
+  const inquiry = wa(
     `Hello MECHPRO SOLUTIONS LTD. I'm interested in the ${product.name} (${product.model}). Please share a quotation including installation.`
   );
+  const photos = product.images || [];
 
   return (
     <>
@@ -43,17 +50,28 @@ export default function ProductDetail() {
       <section className="section">
         <div className="container detail-grid">
           <div>
+            {photos.length > 0 && (
+              <div className="product-gallery">
+                {photos.map((img) => (
+                  <img key={img.url} src={img.url} alt={img.alt || product.name} loading="lazy" />
+                ))}
+              </div>
+            )}
             <SectionHeader kicker="Key features" title="Why this unit earns its place." />
             <ul className="check-list check-list--spread">
               {product.features.map((f) => (
                 <li key={f}><Icon name="check" size={18} /> {f}</li>
               ))}
             </ul>
+            {product.description && (
+              <div className="prose" style={{ marginTop: "1.5rem" }}><p>{product.description}</p></div>
+            )}
             <SectionHeader kicker="Warranty" title="Backed in writing." />
             <div className="prose">
               <p>
-                {product.warranty}. Warranty validity depends on qualified installation
-                and scheduled servicing — both of which we provide and document.
+                {product.warranty || "Warranty per manufacturer terms"}. Warranty validity
+                depends on qualified installation and scheduled servicing — both of
+                which we provide and document.
               </p>
             </div>
           </div>
@@ -67,6 +85,9 @@ export default function ProductDetail() {
               <div className="detail-aside__actions">
                 <Button to="/request-quote" icon="arrow">Request a quotation</Button>
                 <Button href={inquiry} variant="ghost" icon="whatsapp">Ask on WhatsApp</Button>
+                {product.brochure && (
+                  <Button href={product.brochure} variant="ghost" icon="clipboard">Download brochure</Button>
+                )}
               </div>
             </div>
             <div className="detail-aside__card">
@@ -84,7 +105,7 @@ export default function ProductDetail() {
         <div className="container">
           <SectionHeader kicker="Related" title="Also worth a look." />
           <div className="grid grid--3">
-            {related.map((p) => <ProductCard key={p.slug} product={p} />)}
+            {related.map((p, i) => <ProductCard key={p.slug} product={p} i={i} />)}
           </div>
         </div>
       </section>

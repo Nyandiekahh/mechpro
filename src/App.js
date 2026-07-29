@@ -1,11 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 
+import { SiteProvider } from "./context/SiteContext";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import TopBar from "./components/layout/TopBar";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import WhatsAppButton from "./components/layout/WhatsAppButton";
+import ChatWidget from "./components/chat/ChatWidget";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -21,32 +23,42 @@ import RequestQuote from "./pages/RequestQuote";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
+function PageShell() {
+  const { pathname } = useLocation();
+  return (
+    <main key={pathname} className="page-anim">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/:slug" element={<ServiceDetail />} />
+            <Route path="/solutions" element={<Solutions />} />
+            <Route path="/solutions/:slug" element={<SolutionDetail />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:slug" element={<ProductDetail />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<Blog />} />
+            <Route path="/request-quote" element={<RequestQuote />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+    </main>
+  );
+}
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <TopBar />
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/solutions" element={<Solutions />} />
-          <Route path="/solutions/:slug" element={<SolutionDetail />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:slug" element={<ProductDetail />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<Blog />} />
-          <Route path="/request-quote" element={<RequestQuote />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </BrowserRouter>
+    <SiteProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <TopBar />
+        <Navbar />
+        <PageShell />
+        <Footer />
+        <WhatsAppButton />
+        <ChatWidget />
+      </BrowserRouter>
+    </SiteProvider>
   );
 }

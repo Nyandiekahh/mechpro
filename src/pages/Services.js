@@ -1,9 +1,11 @@
 import PageHero from "../components/ui/PageHero";
 import CTASection from "../components/ui/CTASection";
 import ServiceCard from "../components/cards/ServiceCard";
-import services from "../data/services";
+import { useApi } from "../api/hooks";
+import fallbackServices from "../data/services";
 
 export default function Services() {
+  const { data: services } = useApi("/api/services/", fallbackServices);
   return (
     <>
       <PageHero
@@ -14,7 +16,7 @@ export default function Services() {
       <section className="section">
         <div className="container">
           <div className="grid grid--3">
-            {services.map((s) => <ServiceCard key={s.slug} service={s} />)}
+            {services.map((s, i) => <ServiceCard key={s.slug} service={s} i={i} />)}
           </div>
         </div>
       </section>

@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import PageHero from "../components/ui/PageHero";
 import CTASection from "../components/ui/CTASection";
 import ProjectCard from "../components/cards/ProjectCard";
-import projects, { projectSectors } from "../data/projects";
+import { useApi } from "../api/hooks";
+import fallbackProjects from "../data/projects";
 
 export default function Projects() {
+  const { data: projects } = useApi("/api/projects/", fallbackProjects);
   const [sector, setSector] = useState("All");
+
+  // Sector tabs derive from whatever projects exist in the CMS.
+  const sectors = useMemo(
+    () => ["All", ...Array.from(new Set(projects.map((p) => p.sector)))],
+    [projects]);
   const results = sector === "All" ? projects : projects.filter((p) => p.sector === sector);
 
   return (
@@ -18,7 +25,7 @@ export default function Projects() {
       <section className="section">
         <div className="container">
           <div className="filter-tabs" role="tablist" aria-label="Filter projects by sector">
-            {projectSectors.map((s) => (
+            {sectors.map((s) => (
               <button
                 key={s}
                 role="tab"
@@ -31,7 +38,7 @@ export default function Projects() {
             ))}
           </div>
           <div className="grid grid--3">
-            {results.map((p) => <ProjectCard key={p.slug} project={p} />)}
+            {results.map((p, i) => <ProjectCard key={p.slug} project={p} i={i} />)}
           </div>
         </div>
       </section>

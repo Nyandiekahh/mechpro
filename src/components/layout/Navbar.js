@@ -2,10 +2,12 @@ import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import Icon from "../ui/Icon";
 import navigation from "../../data/navigation";
-import siteConfig from "../../data/siteConfig";
+import { LOGO_SRC } from "../../data/branding";
+import { useSite } from "../../context/SiteContext";
 
 /** Sticky primary navigation with mobile drawer. */
 export default function Navbar() {
+  const { config } = useSite();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -13,10 +15,10 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar__inner">
         <Link to="/" className="navbar__brand" onClick={close}>
-          <span className="navbar__mark" aria-hidden="true"><Icon name="snowflake" size={20} stroke={2} /></span>
+          <img className="navbar__logo" src={LOGO_SRC} alt="" />
           <span className="navbar__name">
-            {siteConfig.shortName}
-            <em>{siteConfig.tagline}</em>
+            {config.shortName}
+            <em>{config.tagline}</em>
           </span>
         </Link>
 

@@ -1,8 +1,8 @@
 import PageHero from "../components/ui/PageHero";
 import SectionHeader from "../components/ui/SectionHeader";
 import CTASection from "../components/ui/CTASection";
-import Icon from "../components/ui/Icon";
-import siteConfig from "../data/siteConfig";
+import WhyItem from "../components/cards/WhyItem";
+import { useSite } from "../context/SiteContext";
 
 const values = [
   { icon: "shield", title: "Quality without asterisks", text: "Genuine equipment, spec-compliant installation, documented commissioning. The boring fundamentals, done every single time." },
@@ -19,12 +19,13 @@ const milestones = [
 ];
 
 export default function About() {
+  const { config } = useSite();
   return (
     <>
       <PageHero
         kicker="About us"
         title="An engineering company. Not an equipment shop."
-        lead={siteConfig.descriptor}
+        lead={config.descriptor}
       />
 
       <section className="section">
@@ -47,7 +48,7 @@ export default function About() {
               </p>
               <p>
                 Today we serve homeowners, facility managers, developers and consultant
-                engineers across {siteConfig.serviceAreas.length} counties — and most of
+                engineers across {config.serviceAreas.length} counties — and most of
                 our new work arrives the way engineering work should: referred by someone
                 whose building we already look after.
               </p>
@@ -74,13 +75,7 @@ export default function About() {
         <div className="container">
           <SectionHeader kicker="Core values" title="The rules we don't break." />
           <div className="grid grid--2">
-            {values.map((v) => (
-              <div className="why-item" key={v.title}>
-                <div className="why-item__icon"><Icon name={v.icon} size={24} /></div>
-                <h3>{v.title}</h3>
-                <p>{v.text}</p>
-              </div>
-            ))}
+            {values.map((v, i) => <WhyItem key={v.title} item={v} i={i} />)}
           </div>
         </div>
       </section>
