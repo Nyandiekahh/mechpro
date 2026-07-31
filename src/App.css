@@ -49,7 +49,7 @@
 
 /* ---------------- topbar ---------------- */
 .topbar { background: var(--ink); color: #cfd5c9; font-size: 0.82rem; }
-.topbar__inner { display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.45rem; flex-wrap: wrap; }
+.topbar__inner { display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.45rem; flex-wrap: wrap; min-width: 0; }
 .topbar__group { display: flex; gap: 1.25rem; flex-wrap: wrap; }
 .topbar__item { display: inline-flex; align-items: center; gap: 0.4rem; color: inherit; }
 a.topbar__item:hover { color: var(--white); }
@@ -59,7 +59,7 @@ a.topbar__item:hover { color: var(--white); }
   position: sticky; top: 0; z-index: 60;
   background: var(--paper); border-bottom: 1px solid var(--line);
 }
-.navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.55rem; }
+.navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.55rem; min-width: 0; }
 .navbar__brand { display: flex; align-items: center; gap: 0.65rem; color: var(--ink); }
 .navbar__mark {
   display: grid; place-items: center; width: 42px; height: 42px;
@@ -130,7 +130,8 @@ a.topbar__item:hover { color: var(--white); }
 .section--ink .section-header__rule { color: var(--line-ink); }
 
 /* ---------------- grids & cards ---------------- */
-.grid { display: grid; gap: var(--gap); }
+.grid { display: grid; gap: var(--gap); min-width: 0; }
+.grid > * { min-width: 0; }
 .grid--2 { grid-template-columns: repeat(2, 1fr); }
 .grid--3 { grid-template-columns: repeat(3, 1fr); }
 .grid--4 { grid-template-columns: repeat(4, 1fr); }
@@ -274,9 +275,10 @@ a.topbar__item:hover { color: var(--white); }
 /* ---------------- catalogue controls ---------------- */
 .catalogue-controls { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.4rem; align-items: flex-end; }
 .catalogue-controls__search {
-  flex: 1 1 320px; display: flex; align-items: center; gap: 0.6rem;
+  flex: 1 1 260px; min-width: 0; display: flex; align-items: center; gap: 0.6rem;
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75rem 1rem;
 }
+@media (max-width: 480px) { .catalogue-controls__search { flex-basis: 100%; } }
 .catalogue-controls__search .icon { color: var(--grey); }
 .catalogue-controls__search input { border: 0; outline: 0; width: 100%; background: transparent; }
 .catalogue-controls label > span { display: block; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.35rem; }
@@ -330,7 +332,7 @@ a.topbar__item:hover { color: var(--white); }
 /* ---------------- footer ---------------- */
 .footer { background: var(--white); color: var(--ink-soft); border-top: 1px solid var(--line); }
 .footer__rule { padding-top: 0; }
-.footer__grid { display: grid; grid-template-columns: 1.4fr 0.8fr 1fr 1fr; gap: 2.5rem; padding-block: 3.5rem 2.5rem; }
+.footer__grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem; padding-block: 3.5rem 2.5rem; }
 @media (max-width: 960px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .footer__grid { grid-template-columns: 1fr; } }
 .footer__brand { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; color: var(--ink); }
@@ -362,7 +364,7 @@ a.topbar__item:hover { color: var(--white); }
 
 /* Product photos (rendered when the client uploads images in the CMS) */
 .product-card__media img { width: 100%; height: 100%; object-fit: cover; }
-.product-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2.2rem; }
+.product-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 1rem; margin-bottom: 2.2rem; }
 .product-gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 1px solid var(--line); border-radius: var(--radius); }
 .brand-strip__logo { height: 34px; width: auto; }
 .article-image { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 2rem; }

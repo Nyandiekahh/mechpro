@@ -48,7 +48,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -61,6 +61,15 @@ body {
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;   /* belt-and-suspenders: nothing ever forces side-scroll */
+  width: 100%;
+}
+
+/* Any element that can hold unpredictable text (emails, model numbers, long
+   words a client types into the CMS) wraps instead of stretching the page. */
+h1, h2, h3, h4, p, a, span, li, dd, dt, button, input, textarea {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 img, svg, iframe { display: block; max-width: 100%; }
@@ -90,9 +99,12 @@ h3 { font-size: var(--h3); letter-spacing: -0.01em; line-height: 1.25; }
 
 .container {
   max-width: var(--container);
+  width: 100%;
   margin-inline: auto;
   padding-inline: clamp(1.1rem, 4vw, 2rem);
+  box-sizing: border-box;
 }
+#root { overflow-x: hidden; }
 .container--narrow { max-width: 780px; }
 
 main { min-height: 60vh; }
