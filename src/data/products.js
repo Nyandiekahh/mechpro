@@ -15,7 +15,7 @@ const products = [
     warranty: "10-year compressor, 2-year parts",
     badges: ["Featured", "Best Seller"],
     features: [
-      "Dual Inverter compressor — up to 70% energy saving vs fixed speed",
+      "Dual Inverter compressor, up to 70% energy saving compared to fixed speed",
       "Fast cooling mode reaches set temperature quicker",
       "Low noise: 19 dB in sleep mode",
       "Auto-cleaning coil reduces mould and odour",
@@ -36,7 +36,7 @@ const products = [
     warranty: "5-year compressor, 2-year parts",
     badges: ["Featured"],
     features: [
-      "Full DC inverter with wide voltage tolerance — friendly to Kenyan grids",
+      "Full DC inverter with wide voltage tolerance, well suited to Kenyan grids",
       "Gear function caps power draw at 50/75% on demand",
       "Self-diagnosis with error display",
       "Golden-fin coating resists coastal corrosion",
@@ -57,7 +57,7 @@ const products = [
     warranty: "5-year compressor, 1-year parts",
     badges: ["Featured"],
     features: [
-      "360° airflow — even temperature across open-plan rooms",
+      "360° airflow for even temperature across open-plan rooms",
       "Flush ceiling fit; only the panel is visible",
       "Individual louvre control per direction",
       "Optional fresh-air intake connection",
@@ -78,7 +78,7 @@ const products = [
     warranty: "5-year compressor, 1-year parts",
     badges: [],
     features: [
-      "Fully concealed — grilles are all you see",
+      "Fully concealed, so the grilles are all you actually see",
       "High static pressure for long duct runs",
       "Zoning-ready with motorised dampers",
       "Quiet operation suited to hotels and boardrooms",
@@ -100,7 +100,7 @@ const products = [
     badges: ["New Arrival"],
     features: [
       "Powerful vertical airflow throws air over 15 metres",
-      "No ceiling work required — installs in a day",
+      "No ceiling work required, and it installs in a day",
       "Ideal where ceilings can't carry cassettes",
       "Robust filters for high-dust environments",
     ],
@@ -141,7 +141,7 @@ const products = [
     warranty: "2-year parts",
     badges: [],
     features: [
-      "Sound-insulated casing — ventilation you don't hear",
+      "Sound-insulated casing, so it's ventilation you don't actually hear",
       "EC motors sip power at part load",
       "Speed-controllable for demand ventilation",
       "Compact circular duct mounting",

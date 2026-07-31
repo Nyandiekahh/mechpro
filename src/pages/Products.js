@@ -41,7 +41,7 @@ export default function Products() {
       <PageHero
         kicker="Products"
         title="The catalogue, with the spec plates showing."
-        lead="Every unit listed with capacity, refrigerant and energy class — because that's what actually decides your power bill."
+        lead="Every unit listed with capacity, refrigerant and energy class, because that's what actually decides your power bill."
       />
 
       <section className="section">
@@ -78,7 +78,7 @@ export default function Products() {
           ) : (
             <div className="empty-state">
               <p><strong>No products match that search.</strong></p>
-              <p>Try a broader term, or clear the filters — or just tell us what you need on WhatsApp and we'll source it.</p>
+              <p>Try a broader term, clear the filters, or just tell us what you need on WhatsApp and we'll source it.</p>
             </div>
           )}
         </div>
@@ -86,7 +86,7 @@ export default function Products() {
 
       <CTASection
         title="Don't see the unit you need?"
-        lead="The catalogue shows our common lines — we supply the full range of every brand we carry. Describe what you need and we'll quote it."
+        lead="The catalogue shows our common lines. We supply the full range of every brand we carry, so describe what you need and we'll quote it."
       />
     </>
   );

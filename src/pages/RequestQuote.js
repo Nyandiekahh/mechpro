@@ -129,11 +129,11 @@ export default function RequestQuote() {
                     <li><Icon name="check" size={16} /> A confirmation email is on its way{form.email ? ` to ${form.email}` : ""} with your reference number.</li>
                     <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
                     <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
-                    <li><Icon name="check" size={16} /> Quote your reference — <strong>{reference}</strong> — in any follow-up.</li>
+                    <li><Icon name="check" size={16} /> Quote your reference, <strong>{reference}</strong>, in any follow-up.</li>
                   </>
                 ) : (
                   <>
-                    <li><Icon name="check" size={16} /> Your request opened in WhatsApp — press send if you haven't yet.</li>
+                    <li><Icon name="check" size={16} /> Your request opened in WhatsApp, press send if you haven't yet.</li>
                     <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
                     <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
                   </>
@@ -164,7 +164,7 @@ export default function RequestQuote() {
           items={[
             { label: "Response", value: "Within 24 working hours" },
             { label: "Survey", value: "Free within Nairobi" },
-            { label: "Quote", value: "Itemised — no surprises" },
+            { label: "Quote", value: "Itemised, no surprises" },
           ]}
         />
       </PageHero>
@@ -248,7 +248,7 @@ export default function RequestQuote() {
                 </select>
               </label>
               <label>
-                <span>Tell us more — rooms, sizes, current problems, timelines</span>
+                <span>Tell us more: rooms, sizes, current problems, timelines</span>
                 <textarea rows={5} value={form.message} onChange={set("message")} />
               </label>
             </fieldset>
@@ -260,7 +260,7 @@ export default function RequestQuote() {
               <Button href={mailtoHref} variant="ghost" icon="mail">Send by email instead</Button>
             </div>
             <p className="rfq-form__note">
-              Prefer to talk? Call <a href={config.phoneHref}>{config.phoneDisplay}</a> — a
+              Prefer to talk? Call <a href={config.phoneHref}>{config.phoneDisplay}</a>, a
               human answers.
             </p>
           </form>

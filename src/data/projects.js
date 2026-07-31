@@ -8,7 +8,7 @@ const projects = [
     year: "2026",
     equipment: "LG Multi V VRF · 42 indoor units",
     summary:
-      "Replaced ageing split units across six floors with a zoned VRF system — installed floor by floor over weekends, so the client never lost a working day. Measured energy use dropped by roughly a third.",
+      "Replaced ageing split units across six floors with a zoned VRF system, installed floor by floor over weekends so the client never lost a working day. Measured energy use dropped by roughly a third.",
   },
   {
     slug: "industrial-kitchen-extract",
@@ -28,7 +28,7 @@ const projects = [
     year: "2025",
     equipment: "Redundant precision units · monitoring",
     summary:
-      "N+1 precision cooling for a fintech server room with alarmed temperature monitoring. Commissioned with failover testing witnessed by the client's IT lead — one unit off, room holds.",
+      "N+1 precision cooling for a fintech server room with alarmed temperature monitoring. Commissioned with failover testing witnessed by the client's IT lead: switch one unit off and the room still holds temperature.",
   },
   {
     slug: "hospital-ward-ventilation",
@@ -48,7 +48,7 @@ const projects = [
     year: "2024",
     equipment: "Inverter splits · concealed piping",
     summary:
-      "Developer package for a new apartment block: concealed refrigerant piping installed at construction stage, inverter splits fitted and commissioned at finishing — clean walls, no trunking.",
+      "Developer package for a new apartment block. Refrigerant piping was concealed at construction stage, and inverter splits were fitted and commissioned at finishing, leaving clean walls with no visible trunking.",
   },
   {
     slug: "warehouse-ventilation-mombasa",
@@ -58,7 +58,7 @@ const projects = [
     year: "2024",
     equipment: "Roof extract · destratification fans",
     summary:
-      "High-volume ventilation with destratification for a logistics warehouse in coastal heat — corrosion-resistant equipment specified for the marine environment.",
+      "High-volume ventilation with destratification for a logistics warehouse in coastal heat. We specified corrosion-resistant equipment to suit the marine environment.",
   },
 ];
 

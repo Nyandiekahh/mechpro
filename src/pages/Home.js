@@ -45,7 +45,7 @@ export default function Home() {
       <section className="hero wash">
         <div className="container">
           <p className="kicker kicker--light rise rise-1">
-            HVAC &amp; Mechanical Ventilation · {config.address}
+            Air Conditioning &amp; Mechanical Ventilation · {config.address}
           </p>
           <h1 className="rise rise-2">
             Engineering better{" "}
@@ -56,8 +56,8 @@ export default function Home() {
           </h1>
           <p className="hero__lead rise rise-3">
             Design, supply, installation and maintenance of air conditioning and
-            mechanical ventilation systems — sized from real surveys, installed to
-            spec, and serviced like we plan to keep you for years. Because we do.
+            mechanical ventilation systems, sized from real surveys and installed
+            to spec, serviced the way we'd want it done if it were our own building.
           </p>
           <div className="hero__actions rise rise-4">
             <Button to="/request-quote" icon="arrow">Request a free quotation</Button>
@@ -77,7 +77,7 @@ export default function Home() {
           <SectionHeader
             kicker="What we do"
             title="Seven services. One standard."
-            lead="From a single bedroom split to a six-floor VRF plant — every job gets a survey, a spec, and a commissioning report."
+            lead="From a single bedroom split to a six-floor VRF plant, every job gets a survey, a spec, and a commissioning report."
           />
           <div className="grid grid--3">
             {services.slice(0, 6).map((s, i) => <ServiceCard key={s.slug} service={s} i={i} />)}
@@ -108,7 +108,7 @@ export default function Home() {
           <SectionHeader
             kicker="Equipment"
             title="Units we stand behind."
-            lead="Genuine equipment from authorised channels — with warranties the manufacturer will actually honour."
+            lead="Genuine equipment from authorised channels, with warranties the manufacturer will actually honour."
           />
           <div className="grid grid--4">
             {featured.map((p, i) => <ProductCard key={p.slug} product={p} i={i} />)}
@@ -139,7 +139,7 @@ export default function Home() {
           <SectionHeader
             kicker="Recent work"
             title="Projects that hold up."
-            lead="A few from the file — what was asked, what we installed, and what changed."
+            lead="A few from the file: what was asked, what we installed, and what changed."
           />
           <div className="grid grid--3">
             {projects.slice(0, 3).map((p, i) => <ProjectCard key={p.slug} project={p} i={i} />)}

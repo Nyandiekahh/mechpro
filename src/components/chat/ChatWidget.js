@@ -23,6 +23,7 @@ export default function ChatWidget() {
   const { config, wa } = site;
   const { data: services } = useApi("/api/services/", fallbackServices);
   const { data: products } = useApiAll("/api/products/", fallbackProducts);
+  const { data: faqs } = useApi("/api/faqs/", []);
 
   const [open, setOpen] = useState(false);
   const [teaser, setTeaser] = useState(false);
@@ -35,8 +36,8 @@ export default function ChatWidget() {
   const [flow, setFlow] = useState(null); // { step, answers }
   const listRef = useRef(null);
   const inputRef = useRef(null);
-  const knowledge = useMemo(() => ({ config, services, products }),
-    [config, services, products]);
+  const knowledge = useMemo(() => ({ config, services, products, faqs }),
+    [config, services, products, faqs]);
 
   // Persist + autoscroll
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function ChatWidget() {
 
     // Flow complete → file the RFQ
     setFlow(null);
-    pushBot({ text: "Perfect — filing that with the engineering team now…" }, 300);
+    pushBot({ text: "Perfect, filing that with the engineering team now…" }, 300);
     try {
       const res = await apiPost("/api/rfq/", {
         fullName: answers.fullName, phone: answers.phone, county: answers.county,
@@ -114,7 +115,7 @@ export default function ChatWidget() {
       if (res.ok) {
         pushBot({
           reference: res.data.reference,
-          text: `Done! Your reference is below — an engineer responds within 24 working hours${answers.message ? "" : ", and they'll ask for the details when they call"}. Anything else?`,
+          text: `Done! Your reference is below. An engineer responds within 24 working hours${answers.message ? "" : ", and they'll ask for the details when they call"}. Anything else?`,
           quick: ["Our services", "Find a product", "Talk to a human"],
         }, 900);
       } else {
@@ -122,7 +123,7 @@ export default function ChatWidget() {
       }
     } catch {
       pushBot({
-        text: "I couldn't reach our system just now — but let's not lose this. Send it straight to the team on WhatsApp:",
+        text: "I couldn't reach our system just now, but let's not lose this. Send it straight to the team on WhatsApp:",
         actions: [{ label: "Send via WhatsApp", href: wa(
           `QUOTATION REQUEST (chat)\nName: ${answers.fullName}\nPhone: ${answers.phone}\nCounty: ${answers.county}\nService: ${answers.service}\n${answers.message ? `Details: ${answers.message}` : ""}`
         ) }],
@@ -137,12 +138,24 @@ export default function ChatWidget() {
     setMessages((m) => [...m, msg("user", { text })]);
     setInput("");
 
-    if (flow) { advanceFlow(text); return; }
+    if (flow) {
+      if (/^(cancel|stop|never ?mind|forget it|exit)$/i.test(text)) {
+        setFlow(null);
+        pushBot({ text: "No problem, cancelled. What else can I help with?", quick: ["Get a quotation", "Our services", "Size my room"] }, 350);
+        return;
+      }
+      advanceFlow(text);
+      return;
+    }
 
     // quick-reply intents that map to actions
     if (/^get a quotation$/i.test(text)) { startFlow(); return; }
+    if (/^size my room$/i.test(text)) {
+      pushBot({ text: "Tell me the room in metres or feet, something like \"4m by 5m\" or \"18 sqm\", and I'll give you a starting BTU range." }, 350);
+      return;
+    }
     if (/^browse all products$/i.test(text)) {
-      pushBot({ text: "Here you go — search and filters included:", actions: [{ label: "Open the catalogue", to: "/products" }] });
+      pushBot({ text: "Here you go, search and filters included:", actions: [{ label: "Open the catalogue", to: "/products" }] });
       return;
     }
 

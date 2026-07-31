@@ -4,7 +4,7 @@ const testimonials = [
     name: "Grace W.",
     role: "Facility Manager, Westlands office park",
     rating: 5,
-    text: "The difference is the reporting. After every service visit I get a written condition report with photos. When I ask for budget for a replacement, I have evidence — my directors approve it in one meeting.",
+    text: "The difference is the reporting. After every service visit I get a written condition report with photos, so when I ask for budget for a replacement I have evidence. My directors approve it in one meeting.",
   },
   {
     name: "Daniel K.",
@@ -16,7 +16,7 @@ const testimonials = [
     name: "Eng. Otieno",
     role: "MEP Consultant",
     rating: 5,
-    text: "I specify contractors partly on how they commission. MECHPRO hands over measured performance data without being chased for it — that tells you everything about how they work.",
+    text: "I specify contractors partly on how they commission. MECHPRO hands over measured performance data without being chased for it, and that tells you everything about how they work.",
   },
   {
     name: "Sarah M.",

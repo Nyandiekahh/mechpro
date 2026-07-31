@@ -7,7 +7,7 @@ import { useSite } from "../context/SiteContext";
 const values = [
   { icon: "shield", title: "Quality without asterisks", text: "Genuine equipment, spec-compliant installation, documented commissioning. The boring fundamentals, done every single time." },
   { icon: "engineer", title: "Engineering honesty", text: "If the cheaper option is the right option, we say so. Our reputation outlives any single invoice." },
-  { icon: "clock", title: "Respect for your time", text: "We quote when we said we would, arrive when we said we would, and finish when we said we would — or we call before you have to." },
+  { icon: "clock", title: "Respect for your time", text: "We quote when we said we would, arrive when we said we would, and finish when we said we would. If that ever slips, we call before you have to ask." },
   { icon: "leaf", title: "Efficiency as a duty", text: "Every kilowatt we save a client is a bill that stays lower for a decade. Energy-efficient design is our default, not an upgrade." },
 ];
 
@@ -35,7 +35,7 @@ export default function About() {
             <div className="prose">
               <p>
                 MECHPRO SOLUTIONS LTD was founded on a simple observation: most cooling
-                problems in Kenya aren't equipment problems — they're engineering
+                problems in Kenya aren't equipment problems. They're engineering
                 problems. Units sized by guesswork, installations that void warranties,
                 ventilation that was never calculated. The equipment gets blamed; the
                 method was the fault.
@@ -48,7 +48,7 @@ export default function About() {
               </p>
               <p>
                 Today we serve homeowners, facility managers, developers and consultant
-                engineers across {config.serviceAreas.length} counties — and most of
+                engineers across {config.serviceAreas.length} counties, and most of
                 our new work arrives the way engineering work should: referred by someone
                 whose building we already look after.
               </p>

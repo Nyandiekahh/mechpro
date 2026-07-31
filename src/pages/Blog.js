@@ -44,7 +44,7 @@ export default function Blog() {
       <PageHero
         kicker="Knowledge centre"
         title="Straight answers about cooling and air."
-        lead="Buying guides, energy math and maintenance sense — written for building owners, not for other engineers."
+        lead="Buying guides, energy math and maintenance sense, written for building owners rather than other engineers."
       />
       <section className="section">
         <div className="container">

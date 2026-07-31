@@ -6,11 +6,11 @@ const industries = [
     icon: "home",
     tag: "Homes & apartments",
     challenge:
-      "Homes need quiet, efficient cooling that doesn't dominate the power bill — and installation crews who respect the fact that people live there.",
+      "Homes need quiet, efficient cooling that doesn't dominate the power bill, installed by crews who respect the fact that people actually live there.",
     approach: [
       "Split and multi-split systems sized room by room",
       "Inverter units specified for low running cost",
-      "Neat installation — concealed pipe runs where possible",
+      "Neat installation, with concealed pipe runs where possible",
       "Servicing scheduled around your household, not ours",
     ],
   },
@@ -20,7 +20,7 @@ const industries = [
     icon: "building",
     tag: "Workspaces & towers",
     challenge:
-      "Offices fight uneven temperatures — the corner office freezes while the open plan bakes. Zoning and control are the whole game.",
+      "Offices fight uneven temperatures: the corner office freezes while the open plan bakes. Zoning and control are the whole game.",
     approach: [
       "VRF systems with independent zone control",
       "Ceiling cassettes and concealed units for clean interiors",
@@ -90,7 +90,7 @@ const industries = [
     icon: "factory",
     tag: "Production facilities",
     challenge:
-      "Process heat, dust, fumes and big open volumes — industrial ventilation is about worker safety and process stability, not comfort alone.",
+      "Process heat, dust, fumes and big open volumes. Industrial ventilation is about worker safety and process stability, not comfort alone.",
     approach: [
       "General and spot ventilation engineered from heat loads",
       "Dust and fume extraction at source",

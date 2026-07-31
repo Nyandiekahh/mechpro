@@ -58,7 +58,7 @@ export default function Contact() {
       <PageHero
         kicker="Contact"
         title="A human answers."
-        lead="Phone, WhatsApp, email or the form below — whichever suits you. Office hours listed; contract clients have emergency lines."
+        lead="Phone, WhatsApp, email or the form below, whichever suits you. Office hours are listed below, and contract clients have emergency lines."
       />
 
       <section className="section">
@@ -98,7 +98,7 @@ export default function Contact() {
               <div className="detail-aside__card">
                 <p className="kicker">Message received</p>
                 <ul className="check-list">
-                  <li><Icon name="check" size={16} /> Thanks, {form.fullName.split(" ")[0]} — your message is with our team.</li>
+                  <li><Icon name="check" size={16} /> Thanks, {form.fullName.split(" ")[0]}, your message is with our team.</li>
                   <li><Icon name="check" size={16} /> We respond within one working day, usually much sooner.</li>
                 </ul>
               </div>

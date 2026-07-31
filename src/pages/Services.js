@@ -11,7 +11,7 @@ export default function Services() {
       <PageHero
         kicker="Services"
         title="Everything between the drawing and the cold air."
-        lead="Design, installation, ventilation, maintenance, repairs and contracts — each service on its own page, with the process and the FAQs written out."
+        lead="Design, installation, ventilation, maintenance, repairs and contracts. Each service has its own page, with the process and the FAQs written out."
       />
       <section className="section">
         <div className="container">

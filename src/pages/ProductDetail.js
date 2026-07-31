@@ -70,7 +70,7 @@ export default function ProductDetail() {
             <div className="prose">
               <p>
                 {product.warranty || "Warranty per manufacturer terms"}. Warranty validity
-                depends on qualified installation and scheduled servicing — both of
+                depends on qualified installation and scheduled servicing, both of
                 which we provide and document.
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function ProductDetail() {
             <div className="detail-aside__card">
               <p className="kicker">Get this unit</p>
               <p className="detail-aside__note">
-                Quotations include a site survey to confirm sizing — the price we quote
+                Quotations include a site survey to confirm sizing, so the price we quote
                 is the price you pay.
               </p>
               <div className="detail-aside__actions">

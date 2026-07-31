@@ -3,7 +3,7 @@ const whyUs = [
   {
     icon: "engineer",
     title: "Engineers, not salespeople",
-    text: "Every job starts with a site survey and a heat-load calculation — not a guess. You get equipment sized for your space, not the biggest unit in the warehouse.",
+    text: "Every job starts with a site survey and a heat-load calculation, not a guess. You get equipment sized for your actual space, not the biggest unit in the warehouse.",
   },
   {
     icon: "leaf",
@@ -13,7 +13,7 @@ const whyUs = [
   {
     icon: "shield",
     title: "Genuine equipment, real warranties",
-    text: "We supply from authorised channels only. When the warranty card says 5 years, the manufacturer honours it — because the serial number checks out.",
+    text: "We supply from authorised channels only. When the warranty card says 5 years, the manufacturer honours it, because the serial number actually checks out.",
   },
   {
     icon: "wrench",
@@ -23,7 +23,7 @@ const whyUs = [
   {
     icon: "clock",
     title: "Fast response, honest timelines",
-    text: "We answer the phone, we show up when we said we would, and if a part needs importing we tell you upfront — not after two weeks of silence.",
+    text: "We answer the phone, we show up when we said we would, and if a part needs importing we tell you upfront instead of going quiet for two weeks.",
   },
   {
     icon: "map",

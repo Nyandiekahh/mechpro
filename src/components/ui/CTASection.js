@@ -4,7 +4,7 @@ import { useSite } from "../../context/SiteContext";
 /** Bottom-of-page conversion band — appears on every major page per the WRS. */
 export default function CTASection({
   title = "Ready when your building is.",
-  lead = "Tell us what you're cooling, ventilating or fixing — we'll survey, quote and give you a straight answer.",
+  lead = "Tell us what you're cooling, ventilating or fixing, and we'll survey, quote and give you a straight answer.",
 }) {
   const { config, wa } = useSite();
   return (

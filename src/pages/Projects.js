@@ -20,7 +20,7 @@ export default function Projects() {
       <PageHero
         kicker="Projects"
         title="The file speaks for itself."
-        lead="What the client needed, what we installed, and what changed — a selection from recent years."
+        lead="What the client needed, what we installed, and what changed. A selection from recent years."
       />
       <section className="section">
         <div className="container">

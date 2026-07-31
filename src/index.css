@@ -9,7 +9,9 @@
   /* Colour tokens */
   --green: #1e7a46;
   --green-deep: #14603a;
-  --green-tint: #e9f3ec;
+  --green-tint: #e9f3ec;   /* small accents only — chips, plates — never full sections */
+  --alt: #f1f2ee;           /* neutral off-white for alternating sections, replaces green blocks */
+  --line-soft: #e7e9e2;
   --ink: #23281f;
   --ink-soft: #454c41;
   --paper: #f6f7f3;

@@ -36,7 +36,7 @@ export default function Solutions() {
       <PageHero
         kicker="Solutions"
         title="Designed for your industry's physics."
-        lead="A data centre and a dining room fail differently. Pick your sector — we've written down its specific challenges and how we solve them."
+        lead="A data centre and a dining room fail differently. Pick your sector, and we've written down its specific challenges and how we solve them."
       />
       <section className="section">
         <div className="container">

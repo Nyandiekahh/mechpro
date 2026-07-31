@@ -58,7 +58,7 @@ export default function Footer() {
                 </div>
               )}
               {newsletterState === "error" && (
-                <p className="newsletter-form__error">That didn't go through — check the address and try again.</p>
+                <p className="newsletter-form__error">That didn't go through, check the address and try again.</p>
               )}
             </form>
           </div>

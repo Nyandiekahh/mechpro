@@ -49,7 +49,7 @@ export default function SolutionDetail() {
             <div className="detail-aside__card">
               <p className="kicker">Start here</p>
               <p className="detail-aside__note">
-                Tell us about your facility — we'll survey and quote with sector-specific recommendations.
+                Tell us about your facility and we'll survey and quote with sector-specific recommendations.
               </p>
               <div className="detail-aside__actions">
                 <Button to="/request-quote" icon="arrow">Request a quotation</Button>

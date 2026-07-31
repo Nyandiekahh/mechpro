@@ -8,7 +8,7 @@ const siteConfig = {
   shortName: "MECHPRO",
   tagline: "Professional HVAC Solutions",
   descriptor:
-    "Kenyan mechanical engineering company delivering end-to-end HVAC and mechanical ventilation solutions — design, supply, installation, commissioning and maintenance.",
+    "Kenyan mechanical engineering company delivering end-to-end HVAC and mechanical ventilation solutions: design, supply, installation, commissioning and maintenance.",
 
   phoneDisplay: "+254 758 644 781",
   phoneHref: "tel:+254758644781",
