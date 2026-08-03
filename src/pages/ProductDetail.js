@@ -91,11 +91,16 @@ export default function ProductDetail() {
               </div>
             </div>
             <div className="detail-aside__card">
-              <p className="kicker">Not sure it's the right size?</p>
+              <p className="kicker">What size do you need?</p>
               <p className="detail-aside__note">
-                Read our guide on <Link to="/blog/ac-installation-cost-kenya">what drives installation cost</Link>,
-                or just send us your room dimensions.
+                Room coverage depends on ceiling height, sun exposure and how
+                the space is used, so we size every job properly rather than
+                guess from a chart. Tell us the room and we'll confirm the
+                right unit, free, before you commit.
               </p>
+              <div className="detail-aside__actions">
+                <Button href={inquiry} variant="ghost" icon="whatsapp">Ask on WhatsApp</Button>
+              </div>
             </div>
           </aside>
         </div>

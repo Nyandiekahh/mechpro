@@ -25,19 +25,30 @@ const SERVICE_KEYWORDS = {
   "annual-maintenance-contracts": ["contract", "amc", "annual", "retainer", "facility"],
 };
 
-// BTU sizing table (rough, standard rule-of-thumb ranges for Kenyan room heights/insulation).
+// BTU sizing table — rough starting point only, never shown as a fixed
+// product claim (per house policy: exact coverage is confirmed on a free
+// site survey, not quoted from a chart).
+//
+// Sourced from published HVAC sizing guidance: the commonly-cited US/ASHRAE
+// residential rule of thumb is ~20 BTU per sq ft (~215 BTU/m²), but that
+// assumes a moderate climate and insulated construction. For Kenya's higher
+// solar gain, warmer baseline temperatures and typically less-insulated
+// buildings, the figure widely used by installers in tropical climates runs
+// meaningfully higher, around 500–600 BTU/m². This table uses ~550 BTU/m²
+// as a consistent middle figure within that published range.
 const BTU_TABLE = [
-  { maxSqm: 15, btu: "9,000" },
-  { maxSqm: 23, btu: "12,000" },
-  { maxSqm: 32, btu: "18,000" },
-  { maxSqm: 40, btu: "24,000" },
-  { maxSqm: 60, btu: "36,000" },
+  { maxSqm: 16, btu: "9,000" },
+  { maxSqm: 22, btu: "12,000" },
+  { maxSqm: 33, btu: "18,000" },
+  { maxSqm: 44, btu: "24,000" },
+  { maxSqm: 65, btu: "36,000" },
+  { maxSqm: 87, btu: "48,000" },
 ];
 
 function recommendBtu(sqm) {
   const tier = BTU_TABLE.find((t) => sqm <= t.maxSqm);
   if (tier) return `around ${tier.btu} BTU`;
-  return "36,000 BTU or above, at that size we'd usually recommend a ducted or multi-split system rather than one wall unit";
+  return "above 48,000 BTU, likely a ducted or multi-split system rather than one unit";
 }
 
 // Parses "18 sqm", "200 sqft", "4m x 5m", "20 square meters" out of free text.
@@ -74,9 +85,12 @@ export function think(raw, k) {
   if (sqm !== null && sqm > 0) {
     const rec = recommendBtu(sqm);
     return {
-      text: `For roughly ${sqm % 1 === 0 ? sqm : sqm.toFixed(1)} m² you're typically looking at ${rec}. That's a starting point though. Ceiling height, sun exposure and how many people usually use the room all shift it a bit, which is exactly why we do a proper survey before quoting.`,
-      actions: [{ label: "See units in that range", to: "/products" }],
-      quick: ["Get a quotation", "Talk to a human"],
+      text: `For roughly ${sqm % 1 === 0 ? sqm : sqm.toFixed(1)} m² a rough starting point is ${rec}. That's only a general guide though, not a quote. Ceiling height, sun exposure, insulation and how many people use the room all shift it, sometimes by a full size tier. We size every job properly on a free site survey rather than sell off a chart, so the real answer comes from that.`,
+      actions: [
+        { label: "Get a free sizing survey", to: "/request-quote" },
+        { label: "Browse units in that range", to: "/products" },
+      ],
+      quick: ["Talk to a human"],
     };
   }
   if (hasAny(text, ["how many btu", "what size ac", "what size unit", "btu do i need", "size my room", "room size"])) {
