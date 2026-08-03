@@ -45,13 +45,14 @@ export default function Blog() {
   const { slug } = useParams();
   const { data: posts } = useApi("/api/blog/", fallbackPosts);
 
-  if (slug) return <Article slug={slug} />;
   useSeo({
     title: "HVAC Knowledge Centre",
     description: "Buying guides, energy-saving tips and maintenance advice for air conditioning and ventilation in Kenya, from MECHPRO SOLUTIONS LTD.",
     path: "/blog",
+    enabled: !slug,
   });
 
+  if (slug) return <Article slug={slug} />;
 
   return (
     <>

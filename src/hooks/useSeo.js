@@ -43,8 +43,9 @@ function setCanonical(path) {
  * description: 120-160 char summary for the search snippet
  * path: the route path, e.g. "/services/hvac-design", for the canonical tag
  */
-export default function useSeo({ title, description, path = "" }) {
+export default function useSeo({ title, description, path = "", enabled = true }) {
   useEffect(() => {
+    if (!enabled) return;
     const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
     document.title = fullTitle;
     setMeta("description", description);
@@ -54,5 +55,5 @@ export default function useSeo({ title, description, path = "" }) {
     setMeta("twitter:title", fullTitle);
     setMeta("twitter:description", description);
     setCanonical(path);
-  }, [title, description, path]);
+  }, [title, description, path, enabled]);
 }
