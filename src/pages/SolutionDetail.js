@@ -9,11 +9,18 @@ import ProjectCard from "../components/cards/ProjectCard";
 import { useApi } from "../api/hooks";
 import { getIndustry } from "../data/industries";
 import fallbackProjects from "../data/projects";
+import useSeo from "../hooks/useSeo";
 
 export default function SolutionDetail() {
   const { slug } = useParams();
   const { data: industry, loading } = useApi(`/api/solutions/${slug}/`, getIndustry(slug));
   const { data: projects } = useApi("/api/projects/", fallbackProjects);
+
+  useSeo({
+    title: industry ? `HVAC for ${industry.name}` : "Industry Solution",
+    description: industry ? industry.challenge : "Sector-specific HVAC solutions from MECHPRO SOLUTIONS LTD.",
+    path: `/solutions/${slug}`,
+  });
 
   if (!industry) {
     return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;

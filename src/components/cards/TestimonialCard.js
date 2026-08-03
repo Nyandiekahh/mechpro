@@ -10,7 +10,7 @@ export default function TestimonialCard({ t, i = 0 }) {
       </div>
       <blockquote>“{t.text}”</blockquote>
       <figcaption>
-        {t.photo && <img className="testimonial-card__photo" src={t.photo} alt="" loading="lazy" />}
+        {t.photo && <img className="testimonial-card__photo" src={t.photo} alt={`${t.name}, MECHPRO client`} loading="lazy" />}
         <span>
           <strong>{t.name}</strong>
           <span>{t.role}</span>

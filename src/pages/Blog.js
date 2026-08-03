@@ -6,9 +6,17 @@ import NotFound from "./NotFound";
 import PostCard from "../components/cards/PostCard";
 import { useApi } from "../api/hooks";
 import fallbackPosts, { getPost } from "../data/posts";
+import useSeo from "../hooks/useSeo";
 
 function Article({ slug }) {
   const { data: post, loading } = useApi(`/api/blog/${slug}/`, getPost(slug));
+
+  useSeo({
+    title: post ? post.title : "Article",
+    description: post ? post.excerpt : "HVAC advice from MECHPRO SOLUTIONS LTD.",
+    path: `/blog/${slug}`,
+  });
+
   if (!post) {
     return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;
   }
@@ -38,6 +46,12 @@ export default function Blog() {
   const { data: posts } = useApi("/api/blog/", fallbackPosts);
 
   if (slug) return <Article slug={slug} />;
+  useSeo({
+    title: "HVAC Knowledge Centre",
+    description: "Buying guides, energy-saving tips and maintenance advice for air conditioning and ventilation in Kenya, from MECHPRO SOLUTIONS LTD.",
+    path: "/blog",
+  });
+
 
   return (
     <>

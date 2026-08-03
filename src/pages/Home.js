@@ -13,6 +13,7 @@ import PostCard from "../components/cards/PostCard";
 import { useSite } from "../context/SiteContext";
 import { useApi } from "../api/hooks";
 import useTypewriter from "../hooks/useTypewriter";
+import useSeo from "../hooks/useSeo";
 import fallbackServices from "../data/services";
 import fallbackProjects from "../data/projects";
 import fallbackPosts from "../data/posts";
@@ -30,6 +31,12 @@ const TYPED_PHRASES = [
 ];
 
 export default function Home() {
+  useSeo({
+    title: "Air Conditioning & Mechanical Ventilation Kenya",
+    description: "MECHPRO SOLUTIONS LTD delivers HVAC design, air conditioning installation, mechanical ventilation and maintenance across Nairobi and Kenya. Request a free quotation today.",
+    path: "/",
+  });
+
   const { config, stats, whyUs, brands, testimonials, wa } = useSite();
   const { data: services } = useApi("/api/services/", fallbackServices);
   const { data: featured } = useApi("/api/products/?featured=true",
@@ -61,8 +68,8 @@ export default function Home() {
           </p>
           <div className="hero__actions rise rise-4">
             <Button to="/request-quote" icon="arrow">Request a free quotation</Button>
-            <Button href={config.phoneHref} variant="ghost" icon="phone">Call now</Button>
-            <Button href={wa()} variant="ghost" icon="whatsapp">WhatsApp us</Button>
+            <Button href={config.phoneHref} variant="phone" icon="phone">Call now</Button>
+            <Button href={wa()} variant="whatsapp" icon="whatsapp">WhatsApp us</Button>
           </div>
           <TickRule className="hero__rule" />
           <ul className="hero__stats">

@@ -4,9 +4,16 @@ import CTASection from "../components/ui/CTASection";
 import ProjectCard from "../components/cards/ProjectCard";
 import { useApi } from "../api/hooks";
 import fallbackProjects from "../data/projects";
+import useSeo from "../hooks/useSeo";
 
 export default function Projects() {
   const { data: projects } = useApi("/api/projects/", fallbackProjects);
+  useSeo({
+    title: "Completed HVAC Projects",
+    description: "Commercial, residential, healthcare, hospitality and industrial HVAC projects completed by MECHPRO SOLUTIONS LTD across Kenya.",
+    path: "/projects",
+  });
+
   const [sector, setSector] = useState("All");
 
   // Sector tabs derive from whatever projects exist in the CMS.

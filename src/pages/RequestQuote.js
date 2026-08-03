@@ -7,6 +7,7 @@ import { useSite } from "../context/SiteContext";
 import { useApi } from "../api/hooks";
 import { apiPost } from "../api/client";
 import fallbackServices from "../data/services";
+import useSeo from "../hooks/useSeo";
 
 // Form option lists — from the WRS. Edit here, form updates itself.
 const projectTypes = [
@@ -30,6 +31,12 @@ const emptyForm = {
 
 export default function RequestQuote() {
   const { config, wa } = useSite();
+  useSeo({
+    title: "Request a Free HVAC Quotation",
+    description: "Get a free quotation for air conditioning installation, HVAC design, ventilation or maintenance in Kenya. Response within 24 working hours.",
+    path: "/request-quote",
+  });
+
   const { data: services } = useApi("/api/services/", fallbackServices);
 
   const [form, setForm] = useState(emptyForm);
@@ -76,14 +83,21 @@ export default function RequestQuote() {
     const next = validate();
     if (Object.keys(next).length > 0) { setErrors(next); return; }
 
+    // Open the tab synchronously, inside the click/submit gesture, so
+    // browsers never treat it as a blocked popup — we fill in the URL
+    // once we know whether the API call succeeded or failed.
+    const waTab = window.open("", "_blank", "noreferrer");
+
     setSending(true);
     try {
       // The RFQ workflow: store → reference → emails → receipt.
       const res = await apiPost("/api/rfq/", form);
       if (res.ok) {
+        if (waTab) waTab.close();
         setReference(res.data.reference);
         setSent("api");
       } else if (res.status === 400 && res.data) {
+        if (waTab) waTab.close();
         // Map server-side validation errors onto their fields.
         const serverErrors = {};
         Object.entries(res.data).forEach(([field, msgs]) => {
@@ -95,7 +109,11 @@ export default function RequestQuote() {
       }
     } catch {
       // Backend unreachable — the lead still gets through via WhatsApp.
-      window.open(wa(buildMessage()), "_blank", "noreferrer");
+      // Reuse the tab opened at the start of submit() rather than calling
+      // window.open() here, which some browsers block after an await.
+      const url = wa(buildMessage());
+      if (waTab) waTab.location.href = url;
+      else window.open(url, "_blank", "noreferrer");
       setSent("whatsapp");
     } finally {
       setSending(false);

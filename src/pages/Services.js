@@ -3,9 +3,16 @@ import CTASection from "../components/ui/CTASection";
 import ServiceCard from "../components/cards/ServiceCard";
 import { useApi } from "../api/hooks";
 import fallbackServices from "../data/services";
+import useSeo from "../hooks/useSeo";
 
 export default function Services() {
   const { data: services } = useApi("/api/services/", fallbackServices);
+  useSeo({
+    title: "HVAC Services",
+    description: "Air conditioning installation, HVAC design, mechanical ventilation, preventive maintenance, emergency repairs and annual maintenance contracts across Kenya.",
+    path: "/services",
+  });
+
   return (
     <>
       <PageHero

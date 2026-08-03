@@ -10,12 +10,21 @@ import NotFound from "./NotFound";
 import { useApi, useApiAll } from "../api/hooks";
 import fallbackProducts, { getProduct } from "../data/products";
 import { useSite } from "../context/SiteContext";
+import useSeo from "../hooks/useSeo";
 
 export default function ProductDetail() {
   const { slug } = useParams();
   const { wa } = useSite();
   const { data: product, loading } = useApi(`/api/products/${slug}/`, getProduct(slug));
   const { data: allProducts } = useApiAll("/api/products/", fallbackProducts);
+
+  useSeo({
+    title: product ? product.name : "Product",
+    description: product
+      ? `${product.name} — ${product.brand} ${product.model}. ${product.idealFor || "Supplied and installed by MECHPRO SOLUTIONS LTD."}`
+      : "HVAC equipment supplied and installed by MECHPRO SOLUTIONS LTD.",
+    path: `/products/${slug}`,
+  });
 
   if (!product) {
     return loading ? <section className="section"><div className="container"><p className="kicker">Loading…</p></div></section> : <NotFound />;
@@ -84,7 +93,7 @@ export default function ProductDetail() {
               </p>
               <div className="detail-aside__actions">
                 <Button to="/request-quote" icon="arrow">Request a quotation</Button>
-                <Button href={inquiry} variant="ghost" icon="whatsapp">Ask on WhatsApp</Button>
+                <Button href={inquiry} variant="whatsapp" icon="whatsapp">Ask on WhatsApp</Button>
                 {product.brochure && (
                   <Button href={product.brochure} variant="ghost" icon="clipboard">Download brochure</Button>
                 )}
@@ -99,7 +108,7 @@ export default function ProductDetail() {
                 right unit, free, before you commit.
               </p>
               <div className="detail-aside__actions">
-                <Button href={inquiry} variant="ghost" icon="whatsapp">Ask on WhatsApp</Button>
+                <Button href={inquiry} variant="whatsapp" icon="whatsapp">Ask on WhatsApp</Button>
               </div>
             </div>
           </aside>

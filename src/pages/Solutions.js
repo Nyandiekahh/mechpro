@@ -6,6 +6,7 @@ import Chip from "../components/ui/Chip";
 import useReveal from "../hooks/useReveal";
 import { useApi } from "../api/hooks";
 import industries from "../data/industries";
+import useSeo from "../hooks/useSeo";
 
 function SolutionCard({ industry, i }) {
   const r = useReveal((i % 3) * 90);
@@ -18,7 +19,7 @@ function SolutionCard({ industry, i }) {
     >
       {industry.image && (
         <div className="card-media">
-          <img src={industry.image} alt="" loading="lazy" />
+          <img src={industry.image} alt={`HVAC for ${industry.name} — MECHPRO SOLUTIONS LTD`} loading="lazy" />
         </div>
       )}
       <Chip>{industry.tag}</Chip>
@@ -31,6 +32,12 @@ function SolutionCard({ industry, i }) {
 
 export default function Solutions() {
   const { data: solutions } = useApi("/api/solutions/", industries);
+  useSeo({
+    title: "HVAC Solutions by Industry",
+    description: "HVAC solutions for hospitals, hotels, restaurants, schools, offices, factories and warehouses across Kenya. Sector-specific engineering, not one-size-fits-all.",
+    path: "/solutions",
+  });
+
   return (
     <>
       <PageHero

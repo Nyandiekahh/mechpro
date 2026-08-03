@@ -93,9 +93,13 @@ export default function Footer() {
               <li><span><Icon name="clock" size={15} /> {config.hours}</span></li>
             </ul>
             <div className="footer__socials">
-              {config.socials.map((s) => (
-                <a key={s.label} href={s.href} aria-label={s.label}>{s.label}</a>
-              ))}
+              {config.socials
+                .filter((s) => s.href && s.href !== "#")
+                .map((s) => (
+                  <a key={s.label} href={s.href} aria-label={s.label} target="_blank" rel="noreferrer">
+                    <Icon name={s.label.toLowerCase()} size={18} />
+                  </a>
+                ))}
             </div>
           </div>
         </div>

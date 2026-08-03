@@ -2,6 +2,7 @@ import PageHero from "../components/ui/PageHero";
 import SectionHeader from "../components/ui/SectionHeader";
 import CTASection from "../components/ui/CTASection";
 import WhyItem from "../components/cards/WhyItem";
+import useSeo from "../hooks/useSeo";
 import { useSite } from "../context/SiteContext";
 
 const values = [
@@ -20,6 +21,12 @@ const milestones = [
 
 export default function About() {
   const { config } = useSite();
+  useSeo({
+    title: "About Us",
+    description: "MECHPRO SOLUTIONS LTD is a Kenyan mechanical engineering company delivering professional HVAC and mechanical ventilation solutions. Meet the team behind the work.",
+    path: "/about",
+  });
+
   return (
     <>
       <PageHero

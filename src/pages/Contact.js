@@ -6,11 +6,18 @@ import SectionHeader from "../components/ui/SectionHeader";
 import { useSite } from "../context/SiteContext";
 import Chip from "../components/ui/Chip";
 import { apiPost } from "../api/client";
+import useSeo from "../hooks/useSeo";
 
 const emptyForm = { fullName: "", company: "", email: "", phone: "", subject: "", message: "" };
 
 export default function Contact() {
   const { config, wa } = useSite();
+  useSeo({
+    title: "Contact Us",
+    description: "Call, WhatsApp or email MECHPRO SOLUTIONS LTD for HVAC and air conditioning enquiries in Nairobi and across Kenya. A human answers.",
+    path: "/contact",
+  });
+
 
   // --- General contact form (WRS 'D. Contact Form') → POST /api/contact/ ---
   const [form, setForm] = useState(emptyForm);
@@ -33,11 +40,18 @@ export default function Contact() {
     if (!form.message.trim()) next.message = "Tell us what it's about.";
     if (Object.keys(next).length > 0) { setErrors(next); return; }
 
+    // Opened synchronously within this click handler so it's never treated
+    // as a blocked popup, even though we only fill it in after the await below.
+    const waTab = window.open("", "_blank", "noreferrer");
+
     setSending(true);
     try {
       const res = await apiPost("/api/contact/", form);
-      if (res.ok) { setSent(true); }
-      else if (res.status === 400 && res.data) {
+      if (res.ok) {
+        if (waTab) waTab.close();
+        setSent(true);
+      } else if (res.status === 400 && res.data) {
+        if (waTab) waTab.close();
         const serverErrors = {};
         Object.entries(res.data).forEach(([field, msgs]) => {
           serverErrors[field] = Array.isArray(msgs) ? msgs.join(" ") : String(msgs);
@@ -46,7 +60,9 @@ export default function Contact() {
       } else throw new Error();
     } catch {
       // API unreachable — hand the message to WhatsApp so nothing is lost.
-      window.open(wa(`${form.subject}\n\n${form.message}\n\n— ${form.fullName}, ${form.phone}`), "_blank", "noreferrer");
+      const url = wa(`${form.subject}\n\n${form.message}\n\nFrom ${form.fullName}, ${form.phone}`);
+      if (waTab) waTab.location.href = url;
+      else window.open(url, "_blank", "noreferrer");
       setSent(true);
     } finally {
       setSending(false);
@@ -68,13 +84,13 @@ export default function Contact() {
               <Chip>Phone</Chip>
               <h3>Call us</h3>
               <p className="detail-aside__note">{config.hours}<br />{config.emergencyNote}.</p>
-              <Button href={config.phoneHref} variant="ghost" icon="phone">{config.phoneDisplay}</Button>
+              <Button href={config.phoneHref} variant="phone" icon="phone">{config.phoneDisplay}</Button>
             </div>
             <div className="detail-aside__card contact-card">
               <Chip>WhatsApp</Chip>
               <h3>WhatsApp</h3>
               <p className="detail-aside__note">Fastest for photos of your unit, nameplates or fault codes.</p>
-              <Button href={wa()} variant="ghost" icon="whatsapp">Start a chat</Button>
+              <Button href={wa()} variant="whatsapp" icon="whatsapp">Start a chat</Button>
             </div>
             <div className="detail-aside__card contact-card">
               <Chip>Email</Chip>

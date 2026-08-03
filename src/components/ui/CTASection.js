@@ -17,8 +17,8 @@ export default function CTASection({
         </div>
         <div className="cta-band__actions">
           <Button to="/request-quote" variant="solid" icon="arrow">Request a free quotation</Button>
-          <Button href={config.phoneHref} variant="ghost" icon="phone">{config.phoneDisplay}</Button>
-          <Button href={wa()} variant="ghost" icon="whatsapp">Chat on WhatsApp</Button>
+          <Button href={config.phoneHref} variant="phone" icon="phone">{config.phoneDisplay}</Button>
+          <Button href={wa()} variant="whatsapp" icon="whatsapp">Chat on WhatsApp</Button>
         </div>
       </div>
     </section>

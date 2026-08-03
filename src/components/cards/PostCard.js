@@ -13,7 +13,7 @@ export default function PostCard({ post, i = 0 }) {
     >
       {post.featuredImage && (
         <div className="card-media">
-          <img src={post.featuredImage} alt="" loading="lazy" />
+          <img src={post.featuredImage} alt={post.title} loading="lazy" />
         </div>
       )}
       <p className="post-card__meta"><span>{post.category}</span><span>{post.readTime}</span></p>

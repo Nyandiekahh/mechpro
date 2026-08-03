@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import "./App.css";
+
+import { initAnalytics, trackPageview } from "./api/analytics";
 
 import { SiteProvider } from "./context/SiteContext";
 import ScrollToTop from "./components/layout/ScrollToTop";
@@ -25,6 +28,15 @@ import NotFound from "./pages/NotFound";
 
 function PageShell() {
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
+    trackPageview(pathname);
+  }, [pathname]);
+
   return (
     <main key={pathname} className="page-anim">
           <Routes>

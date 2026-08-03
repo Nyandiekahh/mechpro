@@ -14,7 +14,7 @@ export default function ServiceCard({ service, i = 0 }) {
     >
       {service.image && (
         <div className="card-media">
-          <img src={service.image} alt="" loading="lazy" />
+          <img src={service.image} alt={`${service.name} — MECHPRO SOLUTIONS LTD`} loading="lazy" />
         </div>
       )}
       <p className="card-ref">Service · {String(i + 1).padStart(2, "0")}</p>

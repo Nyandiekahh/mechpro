@@ -1,8 +1,11 @@
 import PageHero from "../components/ui/PageHero";
 import Button from "../components/ui/Button";
+import useSeo from "../hooks/useSeo";
 
 /** Custom 404 — per the WRS, with helpful ways forward. */
 export default function NotFound() {
+  useSeo({ title: "Page Not Found", description: "The page you're looking for doesn't exist or has moved.", path: "/404" });
+
   return (
     <>
       <PageHero

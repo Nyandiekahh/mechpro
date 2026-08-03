@@ -9,11 +9,18 @@ import NotFound from "./NotFound";
 import { useApi } from "../api/hooks";
 import { getService } from "../data/services";
 import { useSite } from "../context/SiteContext";
+import useSeo from "../hooks/useSeo";
 
 export default function ServiceDetail() {
   const { slug } = useParams();
   const { wa } = useSite();
   const { data: service, loading } = useApi(`/api/services/${slug}/`, getService(slug));
+
+  useSeo({
+    title: service ? service.name : "Service",
+    description: service ? service.summary : "HVAC service details from MECHPRO SOLUTIONS LTD.",
+    path: `/services/${slug}`,
+  });
 
   if (!service) {
     // Content added in the CMS won't be in the bundled fallback — wait for the
@@ -76,7 +83,7 @@ export default function ServiceDetail() {
               </ul>
               <div className="detail-aside__actions">
                 <Button to="/request-quote" icon="arrow">Request a quotation</Button>
-                <Button href={inquiry} variant="ghost" icon="whatsapp">Ask on WhatsApp</Button>
+                <Button href={inquiry} variant="whatsapp" icon="whatsapp">Ask on WhatsApp</Button>
               </div>
             </div>
             <div className="detail-aside__card">

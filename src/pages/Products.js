@@ -5,11 +5,18 @@ import ProductCard from "../components/cards/ProductCard";
 import Icon from "../components/ui/Icon";
 import { useApiAll } from "../api/hooks";
 import fallbackProducts from "../data/products";
+import useSeo from "../hooks/useSeo";
 
 export default function Products() {
   // Fetch the ENTIRE catalogue (follows API pagination) so search and
   // filters stay instant client-side — and grow as the client adds products.
   const { data: products } = useApiAll("/api/products/", fallbackProducts);
+  useSeo({
+    title: "Air Conditioner & HVAC Equipment Catalogue",
+    description: "Browse LG, Midea, Hisense and Solstar air conditioners, ventilation fans and HVAC equipment. Genuine units supplied and installed across Kenya.",
+    path: "/products",
+  });
+
 
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");

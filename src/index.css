@@ -9,7 +9,9 @@
   /* Colour tokens */
   --green: #1e7a46;
   --green-deep: #14603a;
-  --green-tint: #e9f3ec;   /* small accents only — chips, plates — never full sections */
+  --green-tint: #e9f3ec;   /* small accents only, chips and plates, never full sections */
+  --brand-bright-green: #2fd66b;  /* vivid accent matching the logo mark, MECHPRO wordmark only */
+  --whatsapp-green: #25d366;
   --alt: #f1f2ee;           /* neutral off-white for alternating sections, replaces green blocks */
   --line-soft: #e7e9e2;
   --ink: #23281f;

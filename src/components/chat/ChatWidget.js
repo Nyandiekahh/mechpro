@@ -14,6 +14,7 @@ import fallbackProducts from "../../data/products";
 import { FLOW_STEPS, greeting, think } from "./brain";
 
 const STORE_KEY = "mechpro-chat-v1";
+const FLOW_STORE_KEY = "mechpro-chat-flow-v1";
 
 let idCounter = 0;
 const msg = (from, body) => ({ id: `m${Date.now()}-${idCounter++}`, from, ...body });
@@ -33,7 +34,11 @@ export default function ChatWidget() {
   });
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [flow, setFlow] = useState(null); // { step, answers }
+  const [sending, setSending] = useState(false);
+  const [flow, setFlow] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem(FLOW_STORE_KEY)) || null; }
+    catch { return null; }
+  }); // { step, answers }
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const knowledge = useMemo(() => ({ config, services, products, faqs }),
@@ -44,6 +49,15 @@ export default function ChatWidget() {
     try { sessionStorage.setItem(STORE_KEY, JSON.stringify(messages.slice(-60))); } catch {}
     if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [messages, typing, open]);
+
+  // Persist the in-progress quotation flow so a refresh mid-conversation
+  // doesn't strand the user answering a question that no longer does anything.
+  useEffect(() => {
+    try {
+      if (flow) sessionStorage.setItem(FLOW_STORE_KEY, JSON.stringify(flow));
+      else sessionStorage.removeItem(FLOW_STORE_KEY);
+    } catch { /* ignore */ }
+  }, [flow]);
 
   // A gentle teaser bubble after a few seconds, once per session
   useEffect(() => {
@@ -80,6 +94,7 @@ export default function ChatWidget() {
   }, [services]);
 
   const advanceFlow = useCallback(async (value) => {
+    if (sending) return; // guard against double-submit while a request is in flight
     const current = FLOW_STEPS[flow.step];
     if (current.validate) {
       const ok = current.validate(current.key === "phone" ? value : { ...flow.answers, [current.key]: value });
@@ -106,6 +121,7 @@ export default function ChatWidget() {
 
     // Flow complete → file the RFQ
     setFlow(null);
+    setSending(true);
     pushBot({ text: "Perfect, filing that with the engineering team now…" }, 300);
     try {
       const res = await apiPost("/api/rfq/", {
@@ -128,8 +144,10 @@ export default function ChatWidget() {
           `QUOTATION REQUEST (chat)\nName: ${answers.fullName}\nPhone: ${answers.phone}\nCounty: ${answers.county}\nService: ${answers.service}\n${answers.message ? `Details: ${answers.message}` : ""}`
         ) }],
       }, 700);
+    } finally {
+      setSending(false);
     }
-  }, [flow, pushBot, wa, stepChips]);
+  }, [flow, pushBot, wa, stepChips, sending]);
 
   // ---------- send handler ----------
   const send = (raw) => {
@@ -261,10 +279,11 @@ export default function ChatWidget() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={flow ? "Type your answer…" : "Ask about services, units, quotes…"}
+              placeholder={sending ? "Sending…" : flow ? "Type your answer…" : "Ask about services, units, quotes…"}
               aria-label="Message the assistant"
+              disabled={sending}
             />
-            <button type="submit" aria-label="Send message">
+            <button type="submit" aria-label="Send message" disabled={sending || !input.trim()}>
               <Icon name="send" size={18} />
             </button>
           </form>

@@ -17,8 +17,18 @@
 .btn--ink:hover { background: #000; color: var(--white); }
 .btn--ghost { border-color: currentColor; color: var(--ink); background: transparent; }
 .btn--ghost:hover { color: var(--green-deep); }
-.page-hero .btn--ghost, .hero .btn--ghost, .cta-band .btn--ghost { color: var(--white); }
-.page-hero .btn--ghost:hover, .hero .btn--ghost:hover, .cta-band .btn--ghost:hover { color: #8fd3ab; }
+.page-hero .btn--ghost, .cta-band .btn--ghost { color: var(--white); }
+.page-hero .btn--ghost:hover, .cta-band .btn--ghost:hover { color: #8fd3ab; }
+.page-hero--img .btn--ghost { border-color: rgba(255, 255, 255, 0.6); }
+
+/* Call Now / WhatsApp Us — solid, high-contrast, unmistakably active
+   (previously a transparent "ghost" outline that read as disabled). */
+.btn--phone { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.btn--phone:hover { background: #000; color: var(--white); }
+.btn--whatsapp { background: var(--whatsapp-green); color: var(--white); border-color: var(--whatsapp-green); }
+.btn--whatsapp:hover { background: #1fb956; color: var(--white); }
+.hero.wash .btn--phone, .page-hero .btn--phone { background: var(--white); color: var(--ink); border-color: var(--white); }
+.hero.wash .btn--phone:hover, .page-hero .btn--phone:hover { background: #e8e9e4; }
 
 /* ---------------- spec plate (signature) ---------------- */
 .specplate {
@@ -65,30 +75,44 @@ a.topbar__item:hover { color: var(--white); }
   display: grid; place-items: center; width: 42px; height: 42px;
   background: var(--green); color: var(--white); border-radius: var(--radius);
 }
-.navbar__name { font-family: var(--font-display); font-weight: 900; font-size: 1.65rem; letter-spacing: -0.03em; line-height: 1; }
+.navbar__name { font-family: var(--font-display); font-weight: 900; font-size: 1.65rem; letter-spacing: -0.03em; line-height: 1; color: var(--brand-bright-green); }
 .navbar__name em { display: block; font-family: var(--font-mono); font-style: normal; font-weight: 500; font-size: 0.64rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--grey); margin-top: 4px; }
-.navbar__links { display: flex; align-items: center; gap: 1.35rem; }
-.navbar__links a { font-weight: 600; font-size: 0.95rem; color: var(--ink); padding-block: 0.3rem; border-bottom: 2px solid transparent; }
+.navbar__brand { flex-shrink: 0; }
+.navbar__links { display: flex; align-items: center; gap: 1.1rem; flex-wrap: nowrap; flex-shrink: 1; min-width: 0; }
+.navbar__links a {
+  font-weight: 600; font-size: 0.94rem; color: var(--ink); padding-block: 0.3rem;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+}
 .navbar__links a:hover { color: var(--green-deep); }
 .navbar__links a.is-active { color: var(--green); border-bottom-color: var(--green); }
 .navbar__links-cta { display: none; }
-.navbar__right { display: flex; align-items: center; gap: 0.8rem; }
+.navbar__right { display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0; }
 .navbar__toggle { display: none; color: var(--ink); }
 
-@media (max-width: 1020px) {
+/* Full desktop nav needs real breathing room for logo + 8 links + CTA button.
+   Anything narrower switches to the hamburger rather than let items get
+   squeezed onto two lines. */
+@media (max-width: 1200px) {
   .navbar__cta { display: none; }
   .navbar__toggle { display: block; }
   .navbar__links {
     position: absolute; inset: 100% 0 auto 0; flex-direction: column; align-items: stretch;
     background: var(--paper); border-bottom: 1px solid var(--line);
     padding: 1rem clamp(1.1rem, 4vw, 2rem) 1.5rem; gap: 0.2rem;
-    display: none;
+    display: none; flex-wrap: wrap;
   }
   .navbar__links.is-open { display: flex; }
-  .navbar__links a { display: block; padding: 0.7rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--line); }
+  .navbar__links a { display: block; padding: 0.7rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--line); white-space: normal; }
   .navbar__links a.is-active { border-bottom-color: var(--green); }
   .navbar__links-cta { display: block; margin-top: 1rem; }
   .navbar__links-cta .btn { width: 100%; justify-content: center; }
+}
+
+/* Between 1200 and ~1310px the full nav fits but is tight — trim the gap
+   a little further so "About Us" and friends never come close to wrapping. */
+@media (min-width: 1201px) and (max-width: 1310px) {
+  .navbar__links { gap: 0.85rem; }
+  .navbar__links a { font-size: 0.9rem; }
 }
 
 /* ---------------- hero ---------------- */
@@ -330,25 +354,30 @@ a.topbar__item:hover { color: var(--white); }
 .page-hero--img .kicker--light, .hero.wash .kicker--light { color: var(--green); }
 
 /* ---------------- footer ---------------- */
-.footer { background: var(--white); color: var(--ink-soft); border-top: 1px solid var(--line); }
+.footer { background: var(--ink); color: #b9c0b2; border-top: none; }
 .footer__rule { padding-top: 0; }
 .footer__grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem; padding-block: 3.5rem 2.5rem; }
 @media (max-width: 960px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .footer__grid { grid-template-columns: 1fr; } }
-.footer__brand { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; color: var(--ink); }
-.footer__desc { font-size: 0.93rem; margin-top: 0.9rem; max-width: 40ch; }
-.footer__areas { font-size: 0.82rem; margin-top: 1.1rem; color: var(--grey); }
-.footer__areas strong { color: var(--ink-soft); }
-.footer h3 { color: var(--ink); font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; font-family: var(--font-mono); font-weight: 500; }
+.footer__brand { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; color: var(--brand-bright-green); }
+.footer__desc { font-size: 0.93rem; margin-top: 0.9rem; max-width: 40ch; color: #c8cec2; }
+.footer__areas { font-size: 0.82rem; margin-top: 1.1rem; color: #97a08f; }
+.footer__areas strong { color: #cfd5c9; }
+.footer h3 { color: var(--white); font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; font-family: var(--font-mono); font-weight: 500; }
 .footer__col ul { display: flex; flex-direction: column; gap: 0.55rem; }
-.footer__col a { color: var(--ink-soft); font-size: 0.93rem; }
-.footer__col a:hover { color: var(--green-deep); }
+.footer__col a { color: #c8cec2; font-size: 0.93rem; }
+.footer__col a:hover { color: #8fd3ab; }
 .footer__contact li a, .footer__contact li span { display: inline-flex; align-items: center; gap: 0.5rem; }
-.footer__socials { display: flex; gap: 1rem; margin-top: 1.3rem; }
-.footer__socials a { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
-.footer__legal { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-block: 1.4rem; font-size: 0.85rem; }
-.footer__legal a { color: var(--ink-soft); }
-.footer__legal a:hover { color: var(--green-deep); }
+.footer__socials { display: flex; gap: 0.6rem; margin-top: 1.3rem; }
+.footer__socials a {
+  display: grid; place-items: center; width: 38px; height: 38px;
+  background: #2c322a; border-radius: 50%; color: #b9c0b2;
+  transition: background 0.18s, color 0.18s;
+}
+.footer__socials a:hover { background: var(--green); color: var(--white); }
+.footer__legal { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid #3a4136; padding-block: 1.4rem; font-size: 0.85rem; color: #97a08f; }
+.footer__legal a { color: #97a08f; }
+.footer__legal a:hover { color: #8fd3ab; }
 
 /* ---------------- WhatsApp float ---------------- */
 .whatsapp-float {
@@ -385,15 +414,15 @@ a.topbar__item:hover { color: var(--white); }
 
 /* Footer newsletter form */
 .newsletter-form { margin-top: 1.5rem; }
-.newsletter-form label { display: block; font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 0.55rem; }
+.newsletter-form label { display: block; font-size: 0.88rem; color: #b9c0b2; margin-bottom: 0.55rem; }
 .newsletter-form__row { display: flex; gap: 0.5rem; }
 .newsletter-form__row input {
-  flex: 1; min-width: 0; background: var(--paper); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 0.7rem 0.9rem; color: var(--ink);
+  flex: 1; min-width: 0; background: #2c322a; border: 1px solid #3a4136;
+  border-radius: var(--radius); padding: 0.7rem 0.9rem; color: var(--white);
 }
 .newsletter-form__row input:focus { outline: 2px solid var(--green); border-color: var(--green); }
 .newsletter-form__row .btn { padding: 0.7rem 1.1rem; font-size: 0.9rem; }
-.newsletter-form__done { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--green-deep); font-size: 0.92rem; }
+.newsletter-form__done { display: inline-flex; align-items: center; gap: 0.45rem; color: #8fd3ab; font-size: 0.92rem; }
 .newsletter-form__error { color: #e8a598; font-size: 0.85rem; margin-top: 0.45rem; }
 
 /* ---------------- official logo ---------------- */
@@ -440,14 +469,10 @@ a.topbar__item:hover { color: var(--white); }
 /* ---- logo watermark wallpaper ---- */
 .wash { position: relative; overflow: hidden; }
 .wash > .container { position: relative; z-index: 1; }
-.wash::before {
-  content: ""; position: absolute; right: -6%; bottom: -24%;
-  width: min(620px, 70vw); aspect-ratio: 1 / 1;
-  background: var(--logo-url) no-repeat center / contain;
-  opacity: 0.05; transform: rotate(-9deg);
-  pointer-events: none; filter: grayscale(1);
-}
-.cta-band.wash::before { right: auto; left: -8%; bottom: -30%; transform: rotate(7deg); opacity: 0.06; }
+/* Logo watermark removed per client request — .wash still provides
+   position:relative/overflow:hidden containment used elsewhere, but no
+   longer paints a background logo. */
+.wash::before { content: none; }
 
 /* ---- page cross-fade on navigation ---- */
 .page-anim { animation: pageIn 0.4s ease both; }
@@ -567,7 +592,22 @@ a.topbar__item:hover { color: var(--white); }
   animation: chatIn 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 @keyframes chatIn { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: none; } }
-@media (max-width: 480px) { .chat-panel { left: 0.8rem; right: 0.8rem; width: auto; } }
+/* Full-screen chat on phones — a floating box is awkward to use one-handed
+   and steals very little screen real estate is worse than none at all. */
+@media (max-width: 560px) {
+  .chat-panel {
+    left: 0; right: 0; bottom: 0; top: 0;
+    width: 100%; height: 100dvh; max-height: none;
+    border-radius: 0; border: none;
+  }
+  .chat-launcher { z-index: 96; }
+  .chat-teaser { max-width: calc(100vw - 2rem); bottom: 5.2rem; }
+}
+
+/* Disabled input/send state — reads as inactive rather than broken. */
+.chat-panel__input input:disabled { opacity: 0.6; }
+.chat-panel__input button:disabled { opacity: 0.45; cursor: default; }
+.chat-panel__input button:disabled:hover { background: var(--green); transform: none; }
 
 .chat-panel__head {
   display: flex; justify-content: space-between; align-items: center;
