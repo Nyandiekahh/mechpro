@@ -1,7 +1,6 @@
 {
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "https://api.mechpro.co.ke/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "https://api.mechpro.co.ke/robots.txt" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
