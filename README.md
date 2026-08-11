@@ -1,71 +1,241 @@
-# Getting Started with Create React App
+# MECHPRO SOLUTIONS LTD — Frontend Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Complete technical documentation for the React frontend at
+www.mechpro.co.ke. Written so a developer unfamiliar with this project
+could get productive using only this document.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 1. Technology Stack
 
-### `npm start`
+| Layer | Technology |
+|---|---|
+| Language | JavaScript (React, functional components + hooks) |
+| Framework | React 18, bootstrapped with Create React App (react-scripts) |
+| Routing | react-router-dom v6 |
+| Styling | Plain CSS (no framework/preprocessor) — `index.css` (design tokens) + `App.css` (components) |
+| State | React's built-in `useState`/`useEffect`/`useContext` — no Redux or external state library |
+| Data fetching | Native `fetch` via a small custom API client (`src/api/`) — no Axios/React Query |
+| Hosting | Vercel |
+| Analytics | Google Analytics 4 (gated behind an env var; dormant until configured) |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Why no state-management library:** the app's data is almost entirely
+server data (products, services, etc.) fetched per-page, with only small
+amounts of local UI state (form inputs, chat messages). React's built-in
+hooks are sufficient at this scale; adding Redux or similar would be
+unnecessary complexity for the actual problem being solved.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 2. Project Structure
 
-### `npm test`
+```
+mechpro/
+├── public/
+│   ├── index.html          # includes Open Graph tags, JSON-LD schema, GSC placeholder
+│   ├── logo.svg              # the real MECHPRO logo — used for favicon and navbar
+│   ├── robots.txt             # NOTE: CRA serves this file directly; it takes
+│   │                          #   precedence over any Vercel rewrite for the same path
+│   └── og-image.png           # social link-preview image
+├── vercel.json                # proxies /sitemap.xml to the backend; SPA fallback routing
+├── .env.development            # REACT_APP_API_URL=http://localhost:8000 (local dev)
+├── .env.production              # REACT_APP_API_URL=https://api.mechpro.co.ke (live)
+├── src/
+│   ├── App.js                   # route definitions, top-level providers
+│   ├── index.js / index.css      # entry point + design tokens (colors, fonts, spacing)
+│   ├── App.css                    # all component styles
+│   ├── api/
+│   │   ├── client.js                # fetch wrapper: apiGet, apiGetAll, apiPost
+│   │   ├── hooks.js                  # useApi, useApiAll — data-fetching hooks with
+│   │   │                             #   bundled-data fallback (site never blanks
+│   │   │                             #   if the backend is briefly unreachable)
+│   │   ├── analytics.js               # gated GA4 loader
+│   │   └── trackClick.js               # fire-and-forget click tracking (NEW)
+│   ├── context/
+│   │   └── SiteContext.js               # company config, stats, brands, testimonials —
+│   │                                     #   loaded once, available everywhere via useSite()
+│   ├── hooks/
+│   │   ├── useSeo.js                     # per-page title/meta/canonical tags
+│   │   ├── useReveal.js                   # scroll-triggered fade-in animation
+│   │   ├── useCountUp.js                   # animated number counters (hero stats)
+│   │   └── useTypewriter.js                 # the hero's typing animation
+│   ├── data/                                 # BUNDLED FALLBACK DATA — see section 5
+│   ├── components/
+│   │   ├── layout/     (Navbar, Footer, TopBar, WhatsAppButton, ScrollToTop)
+│   │   ├── ui/          (Button, Icon, SpecPlate, PageHero, SectionHeader, CTASection,
+│   │   │                 Chip, StatItem, TickRule (disabled — see section 6),
+│   │   │                 MaintenanceBanner (NEW))
+│   │   ├── cards/        (ServiceCard, ProductCard, ProjectCard, TestimonialCard,
+│   │   │                  WhyItem, IndustryTile, PostCard)
+│   │   └── chat/          (ChatWidget, brain.js — the assistant's intent engine)
+│   └── pages/               (one file per route — Home, About, Services, ServiceDetail,
+│                              Solutions, SolutionDetail, Products, ProductDetail,
+│                              Projects, ProjectDetail (NEW), Blog, RequestQuote,
+│                              Contact, Legal (NEW — serves Privacy/Terms/Copyright),
+│                              MaintenancePage (NEW), NotFound)
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 3. Running Locally
 
-### `npm run build`
+```bash
+git clone <repo-url> mechpro
+cd mechpro
+npm install
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Opens at `http://localhost:3000`. Requires the backend running locally
+at `http://localhost:8000` (see backend README) for live data — if it's
+not running, every page still renders using the bundled fallback data in
+`src/data/`, just without live CMS edits reflected.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Always test a production build before pushing**, since Vercel treats
+ESLint warnings as build-breaking errors (`CI=true`) while local `npm
+start` does not:
+```bash
+CI=true npm run build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 4. Deploying
 
-### `npm run eject`
+Push to `main` on GitHub — Vercel auto-deploys on every push. To
+manually force a fresh deploy without a real code change:
+```bash
+git commit --allow-empty -m "Trigger redeploy"
+git push
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Environment variables in Vercel's dashboard** (Settings → Environment
+Variables) must be set separately from the local `.env.production` file
+— Vercel builds independently on its own servers and does not read your
+local files:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Variable | Production value |
+|---|---|
+| `REACT_APP_API_URL` | `https://api.mechpro.co.ke` |
+| `REACT_APP_GA_MEASUREMENT_ID` | *(set once a real GA4 property exists — see backend README)* |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 5. The Fallback-Data Pattern (important to understand)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Every page fetches its content from the live backend API using the
+`useApi`/`useApiAll` hooks, **but every one of those hooks is given a
+bundled fallback** from `src/data/*.js`. This means:
 
-## Learn More
+- The site renders **instantly** on first paint using bundled data,
+  then silently swaps in live data once the API responds.
+- If the backend is ever briefly unreachable, the site **never shows a
+  blank page or error** — it just shows the bundled version.
+- The bundled data in `src/data/` is a **snapshot**, not the source of
+  truth. Editing it does not change the live site; editing content in
+  the Django admin does. The files exist purely as an offline-safe
+  fallback and as the original seed data the backend was first
+  populated from.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 6. Design System Notes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Colors and type scale** live in `src/index.css` as CSS custom
+  properties (`--green`, `--ink`, `--font-display`, etc.) — change a
+  token there and it updates everywhere that references it.
+- **The "tick rule" stroke pattern has been intentionally disabled**
+  (per client feedback that it read as generic/AI-templated). The
+  `TickRule` component still exists and is still imported everywhere it
+  always was, but now renders `null`. This was a deliberate one-file
+  change rather than removing every usage individually, to minimize the
+  chance of missing an instance.
+- **Copy style:** house style avoids em-dashes and hyphenated
+  constructions in user-facing text (replaced with commas, periods, or
+  restructured sentences) — apply this same standard to any new copy
+  written for the site.
+- **Icons** are hand-drawn SVG paths in `components/ui/Icon.js` — no
+  icon library dependency. Add a new icon by adding a new path entry to
+  that file's `paths` object.
 
-### Code Splitting
+## 7. New Pages Added (this update)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Route | Component | Purpose |
+|---|---|---|
+| `/projects/:slug` | `ProjectDetail.js` | Full write-up when a project card is clicked (previously projects had no detail page) |
+| `/privacy` | `Legal.js` (slug="privacy") | Privacy Policy, content from CMS |
+| `/terms` | `Legal.js` (slug="terms") | Terms & Conditions, content from CMS |
+| `/copyright` | `Legal.js` (slug="copyright") | Copyright notice, content from CMS |
 
-### Analyzing the Bundle Size
+**Wiring these into `App.js`** — add these routes alongside the existing
+ones, and add a click on every `ProjectCard` linking to
+`/projects/${project.slug}` (currently project cards are not clickable
+links — this is a required companion change for the new detail pages to
+be reachable):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```jsx
+import ProjectDetail from "./pages/ProjectDetail";
+import Legal from "./pages/Legal";
+// ...
+<Route path="/projects/:slug" element={<ProjectDetail />} />
+<Route path="/privacy" element={<Legal slug="privacy" />} />
+<Route path="/terms" element={<Legal slug="terms" />} />
+<Route path="/copyright" element={<Legal slug="copyright" />} />
+```
 
-### Making a Progressive Web App
+## 8. Maintenance Mode
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The site checks `/api/maintenance/` on load. **Wiring this into
+`App.js`** requires wrapping the route tree:
 
-### Advanced Configuration
+```jsx
+import { useState, useEffect } from "react";
+import MaintenancePage from "./pages/MaintenancePage";
+import MaintenanceBanner from "./components/ui/MaintenanceBanner";
+import { apiGet } from "./api/client";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+// inside the top-level App component, before rendering routes:
+const [maintenance, setMaintenance] = useState(null);
+useEffect(() => {
+  apiGet("/api/maintenance/").then(setMaintenance).catch(() => setMaintenance({ maintenanceMode: false }));
+}, []);
 
-### Deployment
+if (maintenance?.maintenanceMode) {
+  return <MaintenancePage message={maintenance.message} />;
+}
+// otherwise render the app as normal, optionally rendering
+// <MaintenanceBanner text={maintenance?.ticker} /> above the navbar
+// if you want a ticker shown even when NOT in full maintenance mode
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The admin toggles this in Django admin under Site & Company → Site
+settings → Maintenance mode. No redeploy needed — it takes effect the
+next time any visitor's browser polls `/api/maintenance/` (on page
+load).
 
-### `npm run build` fails to minify
+## 9. Click Tracking
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# mechpro
+`src/api/trackClick.js` exports `trackClick(kind)` where `kind` is
+`"phone"`, `"whatsapp"`, or `"email"`. Call it alongside the existing
+`href` on every Call Now / WhatsApp Us / mailto link, e.g.:
+
+```jsx
+<a href={config.phoneHref} onClick={() => trackClick("phone")}>Call now</a>
+```
+
+This should be added to: `WhatsAppButton.js`, `CTASection.js`,
+`Contact.js`, and any hero/page-hero phone or WhatsApp buttons. It is
+fire-and-forget by design — it never blocks or delays the actual link
+navigation, and never throws even if the tracking request fails.
+
+## 10. What Was NOT Fully Built (documented, not silently skipped)
+
+- **Full drag-to-crop image editor in the CMS.** What's implemented
+  instead: uploaded images are automatically constrained to a sensible
+  max size (preserving aspect ratio, never cropping), and the admin can
+  choose "Cover" (fills the frame, crops edges) or "Contain" (shows the
+  whole image, letterboxed) per image — a real, useful control, but not
+  a full visual crop tool. Building an actual crop UI is a meaningfully
+  larger frontend project (typically involves a library like
+  `react-easy-crop`) and should be scoped as its own task if wanted.
+- **Full product filter UI for the new energy rating / capacity /
+  installation type filters.** The backend API supports these filters
+  now (`?energyRating=`, `?capacity=`, `?installationType=`); wiring
+  matching dropdown controls into `Products.js` is a frontend-only
+  follow-up using the same pattern as the existing category/brand
+  filters already there.
+
+---
+
+*Last updated as part of the ownership handover and feature expansion.
+See `README-backend.md` for the corresponding backend documentation.*

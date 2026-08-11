@@ -16,10 +16,10 @@ export default function Button({
       {icon && <Icon name={icon} size={18} />}
     </>
   );
-  if (to) return <Link to={to} className={cls}>{inner}</Link>;
+  if (to) return <Link to={to} className={cls} onClick={onClick}>{inner}</Link>;
   if (href)
     return (
-      <a href={href} className={cls} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+      <a href={href} className={cls} onClick={onClick} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
         {inner}
       </a>
     );

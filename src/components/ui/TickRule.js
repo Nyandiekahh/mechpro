@@ -1,7 +1,10 @@
 /**
- * The signature divider — a thermostat-scale ruler of tick marks.
- * Pure CSS (background gradient); this component just places it.
+ * TickRule — intentionally disabled per client feedback ("remove that
+ * pattern of strokes, they look generic/AI"). Kept as a no-op component
+ * rather than deleted outright, so every existing usage across the app
+ * (PageHero, SectionHeader, hero, footer, cta-band) keeps working with
+ * zero further code changes elsewhere — it just renders nothing now.
  */
-export default function TickRule({ className = "" }) {
-  return <div className={`tickrule ${className}`} aria-hidden="true" />;
+export default function TickRule() {
+  return null;
 }

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import { initAnalytics, trackPageview } from "./api/analytics";
+import { apiGet } from "./api/client";
 
 import { SiteProvider } from "./context/SiteContext";
 import ScrollToTop from "./components/layout/ScrollToTop";
@@ -11,6 +12,7 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import WhatsAppButton from "./components/layout/WhatsAppButton";
 import ChatWidget from "./components/chat/ChatWidget";
+import MaintenanceBanner from "./components/ui/MaintenanceBanner";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -21,9 +23,12 @@ import SolutionDetail from "./pages/SolutionDetail";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import RequestQuote from "./pages/RequestQuote";
 import Contact from "./pages/Contact";
+import Legal from "./pages/Legal";
+import MaintenancePage from "./pages/MaintenancePage";
 import NotFound from "./pages/NotFound";
 
 function PageShell() {
@@ -49,10 +54,14 @@ function PageShell() {
             <Route path="/products" element={<Products />} />
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/request-quote" element={<RequestQuote />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Legal slug="privacy" />} />
+            <Route path="/terms" element={<Legal slug="terms" />} />
+            <Route path="/copyright" element={<Legal slug="copyright" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
     </main>
@@ -60,6 +69,26 @@ function PageShell() {
 }
 
 export default function App() {
+  // Maintenance mode: checked once on load. If on, the whole site is
+  // replaced by the maintenance page (with the scrolling ticker above
+  // it) instead of rendering routes at all. Admin toggles this in
+  // Django admin under Site & Company -> Site settings.
+  const [maintenance, setMaintenance] = useState(null);
+  useEffect(() => {
+    apiGet("/api/maintenance/")
+      .then(setMaintenance)
+      .catch(() => setMaintenance({ maintenanceMode: false }));
+  }, []);
+
+  if (maintenance?.maintenanceMode) {
+    return (
+      <>
+        <MaintenanceBanner text={maintenance.ticker} />
+        <MaintenancePage message={maintenance.message} />
+      </>
+    );
+  }
+
   return (
     <SiteProvider>
       <BrowserRouter>
