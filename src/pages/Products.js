@@ -21,27 +21,41 @@ export default function Products() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [brand, setBrand] = useState("All");
+  const [energyRating, setEnergyRating] = useState("All");
+  const [capacity, setCapacity] = useState("All");
 
   // Filter options derive from whatever exists in the CMS.
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(products.map((p) => p.category)))], [products]);
   const brands = useMemo(
     () => ["All", ...Array.from(new Set(products.map((p) => p.brand)))], [products]);
+  const energyRatings = useMemo(
+    () => ["All", ...Array.from(new Set(products.map((p) => p.energyRating).filter(Boolean)))],
+    [products]);
+  const capacities = useMemo(
+    () => ["All", ...Array.from(new Set(products.map((p) => p.capacityBtu).filter((c) => c && c !== "—")))
+      .sort((a, b) => parseInt(a.replace(/,/g, "")) - parseInt(b.replace(/,/g, "")))],
+    [products]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     return products.filter((p) => {
       const inCategory = category === "All" || p.category === category;
       const inBrand = brand === "All" || p.brand === brand;
+      const inEnergy = energyRating === "All" || p.energyRating === energyRating;
+      const inCapacity = capacity === "All" || p.capacityBtu === capacity;
       const inQuery =
         !q ||
         [p.name, p.brand, p.model, p.category, p.capacityBtu]
           .join(" ")
           .toLowerCase()
           .includes(q);
-      return inCategory && inBrand && inQuery;
+      return inCategory && inBrand && inEnergy && inCapacity && inQuery;
     });
-  }, [products, query, category, brand]);
+  }, [products, query, category, brand, energyRating, capacity]);
+
+  const hasEnergyRatings = energyRatings.length > 1;
+  const hasCapacities = capacities.length > 1;
 
   return (
     <>
@@ -76,6 +90,24 @@ export default function Products() {
                 {brands.map((b) => <option key={b}>{b}</option>)}
               </select>
             </label>
+            {hasCapacities && (
+              <label>
+                <span>Capacity</span>
+                <select value={capacity} onChange={(e) => setCapacity(e.target.value)}>
+                  {capacities.map((c) => (
+                    <option key={c} value={c}>{c === "All" ? "All" : `${c} BTU`}</option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {hasEnergyRatings && (
+              <label>
+                <span>Energy Rating</span>
+                <select value={energyRating} onChange={(e) => setEnergyRating(e.target.value)}>
+                  {energyRatings.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </label>
+            )}
           </div>
 
           {results.length > 0 ? (
