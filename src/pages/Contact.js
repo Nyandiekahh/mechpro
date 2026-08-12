@@ -11,6 +11,17 @@ import useSeo from "../hooks/useSeo";
 
 const emptyForm = { fullName: "", company: "", email: "", phone: "", subject: "", message: "" };
 
+// Fallback labels/required flags — used until the CMS values load, and if
+// the backend patch adding contactFormFields hasn't been deployed yet.
+const DEFAULT_FIELDS = {
+  fullName: { label: "Full name", required: true },
+  company: { label: "Company (optional)", required: false },
+  email: { label: "Email address", required: true },
+  phone: { label: "Phone number", required: true },
+  subject: { label: "Subject", required: true },
+  message: { label: "Message", required: true },
+};
+
 export default function Contact() {
   const { config, wa } = useSite();
   useSeo({
@@ -19,6 +30,7 @@ export default function Contact() {
     path: "/contact",
   });
 
+  const fields = config.contactFormFields || DEFAULT_FIELDS;
 
   // --- General contact form (WRS 'D. Contact Form') -> POST /api/contact/ ---
   const [form, setForm] = useState(emptyForm);
@@ -34,11 +46,11 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault();
     const next = {};
-    if (!form.fullName.trim()) next.fullName = "Please tell us your name.";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Enter a valid email address.";
-    if (!form.phone.trim()) next.phone = "We need a phone number to reach you.";
-    if (!form.subject.trim()) next.subject = "A short subject helps us route it.";
-    if (!form.message.trim()) next.message = "Tell us what it's about.";
+    if (fields.fullName.required && !form.fullName.trim()) next.fullName = "Please tell us your name.";
+    if (fields.email.required && !/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Enter a valid email address.";
+    if (fields.phone.required && !form.phone.trim()) next.phone = "We need a phone number to reach you.";
+    if (fields.subject.required && !form.subject.trim()) next.subject = "A short subject helps us route it.";
+    if (fields.message.required && !form.message.trim()) next.message = "Tell us what it's about.";
     if (Object.keys(next).length > 0) { setErrors(next); return; }
 
     const waTab = window.open("", "_blank", "noreferrer");
@@ -94,10 +106,10 @@ export default function Contact() {
               <Chip>Email</Chip>
               <h3>Email</h3>
               <ul className="footer__contact">
-                <li><a href={`mailto:${config.emails.info}`}>{config.emails.info}</a></li>
-                <li><a href={`mailto:${config.emails.sales}`}>{config.emails.sales}</a></li>
-                <li><a href={`mailto:${config.emails.quotations}`}>{config.emails.quotations}</a></li>
-                <li><a href={`mailto:${config.emails.support}`}>{config.emails.support}</a></li>
+                <li><a href={`mailto:${config.emails.info}`} onClick={() => trackClick("email")}>{config.emails.info}</a></li>
+                <li><a href={`mailto:${config.emails.sales}`} onClick={() => trackClick("email")}>{config.emails.sales}</a></li>
+                <li><a href={`mailto:${config.emails.quotations}`} onClick={() => trackClick("email")}>{config.emails.quotations}</a></li>
+                <li><a href={`mailto:${config.emails.support}`} onClick={() => trackClick("email")}>{config.emails.support}</a></li>
               </ul>
             </div>
           </div>
@@ -122,34 +134,34 @@ export default function Contact() {
                   <legend>Your message</legend>
                   <div className="rfq-form__row">
                     <label>
-                      <span>Full name *</span>
+                      <span>{fields.fullName.label}{fields.fullName.required ? " *" : ""}</span>
                       <input value={form.fullName} onChange={set("fullName")} autoComplete="name" />
                       {errors.fullName && <em className="field-error">{errors.fullName}</em>}
                     </label>
                     <label>
-                      <span>Company (optional)</span>
+                      <span>{fields.company.label}</span>
                       <input value={form.company} onChange={set("company")} autoComplete="organization" />
                     </label>
                   </div>
                   <div className="rfq-form__row">
                     <label>
-                      <span>Email address *</span>
+                      <span>{fields.email.label}{fields.email.required ? " *" : ""}</span>
                       <input value={form.email} onChange={set("email")} inputMode="email" autoComplete="email" />
                       {errors.email && <em className="field-error">{errors.email}</em>}
                     </label>
                     <label>
-                      <span>Phone number *</span>
+                      <span>{fields.phone.label}{fields.phone.required ? " *" : ""}</span>
                       <input value={form.phone} onChange={set("phone")} inputMode="tel" autoComplete="tel" />
                       {errors.phone && <em className="field-error">{errors.phone}</em>}
                     </label>
                   </div>
                   <label>
-                    <span>Subject *</span>
+                    <span>{fields.subject.label}{fields.subject.required ? " *" : ""}</span>
                     <input value={form.subject} onChange={set("subject")} />
                     {errors.subject && <em className="field-error">{errors.subject}</em>}
                   </label>
                   <label>
-                    <span>Message *</span>
+                    <span>{fields.message.label}{fields.message.required ? " *" : ""}</span>
                     <textarea rows={5} value={form.message} onChange={set("message")} />
                     {errors.message && <em className="field-error">{errors.message}</em>}
                   </label>
