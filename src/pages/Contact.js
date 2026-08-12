@@ -37,6 +37,7 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [fallbackUrl, setFallbackUrl] = useState(null); // set only if the API call fails
 
   const set = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
@@ -53,16 +54,12 @@ export default function Contact() {
     if (fields.message.required && !form.message.trim()) next.message = "Tell us what it's about.";
     if (Object.keys(next).length > 0) { setErrors(next); return; }
 
-    const waTab = window.open("", "_blank", "noreferrer");
-
     setSending(true);
     try {
       const res = await apiPost("/api/contact/", form);
       if (res.ok) {
-        if (waTab) waTab.close();
         setSent(true);
       } else if (res.status === 400 && res.data) {
-        if (waTab) waTab.close();
         const serverErrors = {};
         Object.entries(res.data).forEach(([field, msgs]) => {
           serverErrors[field] = Array.isArray(msgs) ? msgs.join(" ") : String(msgs);
@@ -70,10 +67,11 @@ export default function Contact() {
         setErrors(serverErrors);
       } else throw new Error();
     } catch {
-      const url = wa(`${form.subject}\n\n${form.message}\n\nFrom ${form.fullName}, ${form.phone}`);
-      if (waTab) waTab.location.href = url;
-      else window.open(url, "_blank", "noreferrer");
-      setSent(true);
+      // The API call failed. Rather than auto-opening a WhatsApp tab
+      // (which browsers often block after an async call, and which
+      // flashes an empty tab open-then-closed even when it isn't
+      // blocked), show the customer a real link they tap themselves.
+      setFallbackUrl(wa(`${form.subject}\n\n${form.message}\n\nFrom ${form.fullName}, ${form.phone}`));
     } finally {
       setSending(false);
     }
@@ -129,7 +127,21 @@ export default function Contact() {
                 </ul>
               </div>
             ) : (
-              <form className="rfq-form" onSubmit={submit} noValidate>
+              <>
+                {fallbackUrl && (
+                  <div className="detail-aside__card" style={{ marginBottom: "1.5rem" }}>
+                    <p className="kicker">Couldn't send just now</p>
+                    <p className="detail-aside__note">
+                      Our system didn't confirm your message went through. Send it directly on WhatsApp instead, nothing is lost.
+                    </p>
+                    <div className="detail-aside__actions">
+                      <Button href={fallbackUrl} variant="whatsapp" icon="whatsapp" onClick={() => trackClick("whatsapp")}>
+                        Send via WhatsApp
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <form className="rfq-form" onSubmit={submit} noValidate>
                 <fieldset>
                   <legend>Your message</legend>
                   <div className="rfq-form__row">
@@ -170,6 +182,7 @@ export default function Contact() {
                   <Button type="submit" icon="arrow">{sending ? "Sending..." : "Send message"}</Button>
                 </div>
               </form>
+              </>
             )}
           </div>
           <aside className="detail-aside">

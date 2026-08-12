@@ -44,6 +44,7 @@ export default function RequestQuote() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(null);        // null | "api" | "whatsapp"
   const [reference, setReference] = useState("");
+  const [fallbackUrl, setFallbackUrl] = useState(null);
 
   const set = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
@@ -83,21 +84,14 @@ export default function RequestQuote() {
     const next = validate();
     if (Object.keys(next).length > 0) { setErrors(next); return; }
 
-    // Open the tab synchronously, inside the click/submit gesture, so
-    // browsers never treat it as a blocked popup — we fill in the URL
-    // once we know whether the API call succeeded or failed.
-    const waTab = window.open("", "_blank", "noreferrer");
-
     setSending(true);
     try {
       // The RFQ workflow: store → reference → emails → receipt.
       const res = await apiPost("/api/rfq/", form);
       if (res.ok) {
-        if (waTab) waTab.close();
         setReference(res.data.reference);
         setSent("api");
       } else if (res.status === 400 && res.data) {
-        if (waTab) waTab.close();
         // Map server-side validation errors onto their fields.
         const serverErrors = {};
         Object.entries(res.data).forEach(([field, msgs]) => {
@@ -108,12 +102,11 @@ export default function RequestQuote() {
         throw new Error("unexpected");
       }
     } catch {
-      // Backend unreachable — the lead still gets through via WhatsApp.
-      // Reuse the tab opened at the start of submit() rather than calling
-      // window.open() here, which some browsers block after an await.
-      const url = wa(buildMessage());
-      if (waTab) waTab.location.href = url;
-      else window.open(url, "_blank", "noreferrer");
+      // Backend unreachable. Rather than auto-opening a WhatsApp tab
+      // (which browsers often block after an async call, and which
+      // flashes an empty tab open-then-closed even when it isn't
+      // blocked), show the customer a real link they tap themselves.
+      setFallbackUrl(wa(buildMessage()));
       setSent("whatsapp");
     } finally {
       setSending(false);
@@ -151,13 +144,16 @@ export default function RequestQuote() {
                   </>
                 ) : (
                   <>
-                    <li><Icon name="check" size={16} /> Your request opened in WhatsApp, press send if you haven't yet.</li>
+                    <li><Icon name="check" size={16} /> We couldn't confirm your request went through automatically.</li>
+                    <li><Icon name="check" size={16} /> Tap below to send it on WhatsApp, nothing is lost.</li>
                     <li><Icon name="check" size={16} /> Our engineering team reviews and responds within 24 working hours.</li>
-                    <li><Icon name="check" size={16} /> If your project needs a site survey, we'll schedule one when we call.</li>
                   </>
                 )}
               </ul>
               <div className="detail-aside__actions">
+                {sent === "whatsapp" && fallbackUrl && (
+                  <Button href={fallbackUrl} variant="whatsapp" icon="whatsapp">Send via WhatsApp</Button>
+                )}
                 {sent === "whatsapp" && (
                   <Button href={mailtoHref} variant="ghost" icon="mail">Send by email instead</Button>
                 )}
