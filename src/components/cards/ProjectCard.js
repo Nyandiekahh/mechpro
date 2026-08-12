@@ -1,10 +1,17 @@
+import { Link } from "react-router-dom";
 import SpecPlate from "../ui/SpecPlate";
+import Icon from "../ui/Icon";
 import useReveal from "../../hooks/useReveal";
 
 export default function ProjectCard({ project, i = 0 }) {
   const r = useReveal((i % 3) * 90);
   return (
-    <article ref={r.ref} className={`card project-card ${r.className}`} style={r.style}>
+    <Link
+      to={`/projects/${project.slug}`}
+      ref={r.ref}
+      className={`card project-card ${r.className}`}
+      style={r.style}
+    >
       {project.image && (
         <div className="card-media">
           <img src={project.image} alt={project.name} loading="lazy" />
@@ -22,6 +29,7 @@ export default function ProjectCard({ project, i = 0 }) {
           { label: "Equipment", value: project.equipment },
         ]}
       />
-    </article>
+      <span className="card__link">See the full story <Icon name="arrow" size={16} /></span>
+    </Link>
   );
 }
