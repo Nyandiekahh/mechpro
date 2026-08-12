@@ -13,6 +13,7 @@ import PostCard from "../components/cards/PostCard";
 import { useSite } from "../context/SiteContext";
 import { useApi } from "../api/hooks";
 import useTypewriter from "../hooks/useTypewriter";
+import { trackClick } from "../api/trackClick";
 import useSeo from "../hooks/useSeo";
 import fallbackServices from "../data/services";
 import fallbackProjects from "../data/projects";
@@ -68,8 +69,8 @@ export default function Home() {
           </p>
           <div className="hero__actions rise rise-4">
             <Button to="/request-quote" icon="arrow">Request a free quotation</Button>
-            <Button href={config.phoneHref} variant="phone" icon="phone">Call now</Button>
-            <Button href={wa()} variant="whatsapp" icon="whatsapp">WhatsApp us</Button>
+            <Button href={config.phoneHref} variant="phone" icon="phone" onClick={() => trackClick("phone")}>Call now</Button>
+            <Button href={wa()} variant="whatsapp" icon="whatsapp" onClick={() => trackClick("whatsapp")}>WhatsApp us</Button>
           </div>
           <TickRule className="hero__rule" />
           <ul className="hero__stats">

@@ -1,5 +1,6 @@
 import Button from "./Button";
 import { useSite } from "../../context/SiteContext";
+import { trackClick } from "../../api/trackClick";
 
 /** Bottom-of-page conversion band — appears on every major page per the WRS. */
 export default function CTASection({
@@ -17,8 +18,8 @@ export default function CTASection({
         </div>
         <div className="cta-band__actions">
           <Button to="/request-quote" variant="solid" icon="arrow">Request a free quotation</Button>
-          <Button href={config.phoneHref} variant="phone" icon="phone">{config.phoneDisplay}</Button>
-          <Button href={wa()} variant="whatsapp" icon="whatsapp">Chat on WhatsApp</Button>
+          <Button href={config.phoneHref} variant="phone" icon="phone" onClick={() => trackClick("phone")}>{config.phoneDisplay}</Button>
+          <Button href={wa()} variant="whatsapp" icon="whatsapp" onClick={() => trackClick("whatsapp")}>Chat on WhatsApp</Button>
         </div>
       </div>
     </section>

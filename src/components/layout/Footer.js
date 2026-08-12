@@ -5,6 +5,7 @@ import TickRule from "../ui/TickRule";
 import { useSite } from "../../context/SiteContext";
 import { useApi } from "../../api/hooks";
 import { apiPost } from "../../api/client";
+import { trackClick } from "../../api/trackClick";
 import navigation from "../../data/navigation";
 import { LOGO_SRC } from "../../data/branding";
 import fallbackServices from "../../data/services";
@@ -85,10 +86,10 @@ export default function Footer() {
           <div className="footer__col">
             <h3>Talk to us</h3>
             <ul className="footer__contact">
-              <li><a href={config.phoneHref}><Icon name="phone" size={15} /> {config.phoneDisplay}</a></li>
-              <li><a href={wa()} target="_blank" rel="noreferrer"><Icon name="whatsapp" size={15} /> WhatsApp us</a></li>
-              <li><a href={`mailto:${config.emails.sales}`}><Icon name="mail" size={15} /> {config.emails.sales}</a></li>
-              <li><a href={`mailto:${config.emails.support}`}><Icon name="mail" size={15} /> {config.emails.support}</a></li>
+              <li><a href={config.phoneHref} onClick={() => trackClick("phone")}><Icon name="phone" size={15} /> {config.phoneDisplay}</a></li>
+              <li><a href={wa()} target="_blank" rel="noreferrer" onClick={() => trackClick("whatsapp")}><Icon name="whatsapp" size={15} /> WhatsApp us</a></li>
+              <li><a href={`mailto:${config.emails.sales}`} onClick={() => trackClick("email")}><Icon name="mail" size={15} /> {config.emails.sales}</a></li>
+              <li><a href={`mailto:${config.emails.support}`} onClick={() => trackClick("email")}><Icon name="mail" size={15} /> {config.emails.support}</a></li>
               <li><span><Icon name="pin" size={15} /> {config.address}</span></li>
               <li><span><Icon name="clock" size={15} /> {config.hours}</span></li>
             </ul>
