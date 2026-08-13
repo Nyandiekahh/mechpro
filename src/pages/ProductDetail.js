@@ -52,6 +52,12 @@ export default function ProductDetail() {
             { label: "Energy", value: product.energyRating },
             { label: "Refrigerant", value: product.refrigerant },
             { label: "Power", value: product.power },
+            {
+              label: "Price",
+              value: product.price
+                ? `KES ${Math.round(Number(product.price)).toLocaleString("en-KE")}`
+                : "",
+            },
           ]}
         />
       </PageHero>
