@@ -35,6 +35,12 @@ export default function ProductCard({ product, i = 0 }) {
             { label: "Capacity", value: product.capacityBtu === "—" ? product.coverage : `${product.capacityBtu} BTU` },
             { label: "Energy", value: product.energyRating },
             { label: "Refrigerant", value: product.refrigerant },
+            {
+              label: "Price",
+              value: product.price
+                ? `KES ${Math.round(Number(product.price)).toLocaleString("en-KE")}`
+                : "",
+            },
           ]}
         />
         <div className="product-card__actions">
