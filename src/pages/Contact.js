@@ -6,6 +6,7 @@ import SectionHeader from "../components/ui/SectionHeader";
 import { useSite } from "../context/SiteContext";
 import Chip from "../components/ui/Chip";
 import { apiPost } from "../api/client";
+import { trackAdsConversion } from "../api/analytics";
 import { trackClick } from "../api/trackClick";
 import useSeo from "../hooks/useSeo";
 
@@ -59,6 +60,7 @@ export default function Contact() {
       const res = await apiPost("/api/contact/", form);
       if (res.ok) {
         setSent(true);
+        trackAdsConversion(); // Google Ads conversion (lead)
       } else if (res.status === 400 && res.data) {
         const serverErrors = {};
         Object.entries(res.data).forEach(([field, msgs]) => {
