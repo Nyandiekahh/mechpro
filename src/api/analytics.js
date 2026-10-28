@@ -32,3 +32,26 @@ export function trackPageview(path) {
   if (!GA_ID || typeof window.gtag !== "function") return;
   window.gtag("event", "page_view", { page_path: path });
 }
+
+// ------------------------------------------------------------------
+// Google Ads conversion — "Purchase" goal (AW-18538282653).
+// The Google tag itself is loaded in public/index.html. This fires the
+// event snippet, but ONLY when called — i.e. on a successful quote
+// request, never on plain page loads. transactionId lets Google
+// de-duplicate if the same conversion is reported twice.
+// ------------------------------------------------------------------
+const ADS_CONVERSION_SEND_TO = "AW-18538282653/iCPOCMTsq6odEJ393odF";
+
+export function trackAdsConversion(transactionId = "") {
+  try {
+    if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+    window.gtag("event", "conversion", {
+      send_to: ADS_CONVERSION_SEND_TO,
+      value: 1.0,
+      currency: "USD",
+      transaction_id: transactionId || "",
+    });
+  } catch {
+    // best-effort only — never block the customer's submission
+  }
+}

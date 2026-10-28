@@ -6,6 +6,7 @@ import SpecPlate from "../components/ui/SpecPlate";
 import { useSite } from "../context/SiteContext";
 import { useApi } from "../api/hooks";
 import { apiPost } from "../api/client";
+import { trackAdsConversion } from "../api/analytics";
 import fallbackServices from "../data/services";
 import useSeo from "../hooks/useSeo";
 
@@ -91,6 +92,7 @@ export default function RequestQuote() {
       if (res.ok) {
         setReference(res.data.reference);
         setSent("api");
+        trackAdsConversion(res.data.reference); // Google Ads conversion
       } else if (res.status === 400 && res.data) {
         // Map server-side validation errors onto their fields.
         const serverErrors = {};
